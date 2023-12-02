@@ -1,0 +1,1 @@
+val world : string
