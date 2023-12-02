@@ -1,2 +1,8 @@
 (library
- (name aoc))
+ (name day_1)
+ (modules day_1)
+ (libraries parse))
+
+(library
+ (name parse)
+ (modules parse))

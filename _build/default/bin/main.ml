@@ -1,1 +1,1 @@
-let () = Printf.printf "%s!\\n" Aoc.world
+let () = Day_1.run
