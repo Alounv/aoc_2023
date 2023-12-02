@@ -1,0 +1,17 @@
+(library
+ (name day_1)
+ (modules day_1)
+ (libraries parse)
+ (inline_tests
+  (deps ../inputs/day_1_1.txt))
+ (preprocess
+  (pps ppx_inline_test ppx_assert)))
+
+(library
+ (name parse)
+ (modules parse)
+ (libraries sexplib)
+ (inline_tests
+  (deps ../inputs/parse.txt))
+ (preprocess
+  (pps ppx_inline_test ppx_assert)))
