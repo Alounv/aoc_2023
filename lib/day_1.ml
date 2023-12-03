@@ -4,13 +4,13 @@ open List
 
 
 let real_input = Parse.read "../inputs/day_1_1.txt"
-(* input with type string not string t*)
 
-let parse = Parse.get_lines
 
 let is_digit c = 
-  let code = Char.code c in
-  code >= 48 && code <= 57
+  match c with
+    | '0' .. '9' -> true
+    | _ -> false 
+
 
 let to_digit c = 
   let code = Char.code c in
@@ -50,15 +50,14 @@ let get_line_result line =
 ;;
   
 
-let logic input = 
-let lines = parse input in 
+let logic lines = 
 let numbers = List.filter_map get_line_result lines in
 List.fold_left (+) 0 numbers
 ;;
 
 
 
-let run = print_int 142
+let run () = print_int 142
 
 
 (* tests *)
@@ -70,6 +69,20 @@ a1b2c3d4e5f
 treb7uchet
 "
 let expected = 142
-let%test_unit "logic" = [%test_eq: int] (logic test_input) expected
+let%test_unit "logic" = [%test_eq: int] (logic (Parse.get_lines test_input)) expected
 
+let expected = 54916
+let%test_unit "logic" = [%test_eq: int] (logic real_input) expected
+
+let test_input = "
+two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen
+"
+let expected = 281
+let%test_unit "logic" = [%test_eq: int] (logic (Parse.get_lines test_input)) expected
 
