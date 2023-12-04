@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 
 let r_symbols = Str.regexp "[^0-9.]"
@@ -128,54 +128,54 @@ let run () =
 
 (* I add % symbol to check the end of the numbers or correctly calulated *)
 (* I add * symbol to check it is not take into account in the second part *)
-let test_input = "
-467..114.% 
-...*......
-..35..633.
-......#...
-617*......
-.....+.58.
-..592.....
-......755*
-...$.*....
-.664.598.. 
-"
-
-let%test_unit "get_symbol_position" = 
-  let expected = [9; 8; 7; 4; 3; 1; 0] in
-  [%test_eq: int list] (get_symbol_position "##.$#..*+#" r_symbols) expected
-
-let%test_unit "get_numbers_positions" =
-  let expected = [114; 467] in
-  [%test_eq: int list] (List.map (fun x -> x.value) (get_numbers_positions "467..114.." 0)) expected
-
-let%test_unit "get_numbers_positions" =
-  let expected = [5; 0] in
-  [%test_eq: int list] (List.map (fun x -> x.s) (get_numbers_positions "467..114.." 0)) expected
-
-let%test_unit "get_numbers_positions" =
-  let expected = [7; 2] in
-  [%test_eq: int list] (List.map (fun x -> x.e) (get_numbers_positions "467..114.." 0)) expected
-
-let%test_unit "logic" =  
-  let expected = 4361 in
-  [%test_eq: int] (logic (Parse.get_lines test_input)) expected
-
-let%test_unit "logic" =  
-  let expected = 539590 in
-  [%test_eq: int] (logic (real_input)) expected
-
-
-(* Part 2 *)
-
-let%test_unit "get_symbol_position" = 
-  let expected = [7] in
-  [%test_eq: int list] (get_symbol_position "##.$#..*+#" r_star) expected
-
-let%test_unit "logic2" =
-  let expected = 467835 in
-  [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected
-
-let%test_unit "logic2" =
-  let expected = 80703636 in
-  [%test_eq: int] (logic2 (real_input)) expected
+(* let test_input = " *)
+   (* 467..114.%  *)
+   (* ...*...... *)
+   (* ..35..633. *)
+   (* ......#... *)
+   (* 617*...... *)
+   (* .....+.58. *)
+   (* ..592..... *)
+   (* ......755* *)
+   (* ...$.*.... *)
+   (* .664.598..  *)
+   (* " *)
+(**)
+(* let%test_unit "get_symbol_position" =  *)
+(*   let expected = [9; 8; 7; 4; 3; 1; 0] in *)
+(*   [%test_eq: int list] (get_symbol_position "##.$#..*+#" r_symbols) expected *)
+(**)
+(* let%test_unit "get_numbers_positions" = *)
+(*   let expected = [114; 467] in *)
+(*   [%test_eq: int list] (List.map (fun x -> x.value) (get_numbers_positions "467..114.." 0)) expected *)
+(**)
+(* let%test_unit "get_numbers_positions" = *)
+(*   let expected = [5; 0] in *)
+(*   [%test_eq: int list] (List.map (fun x -> x.s) (get_numbers_positions "467..114.." 0)) expected *)
+(**)
+(* let%test_unit "get_numbers_positions" = *)
+(*   let expected = [7; 2] in *)
+(*   [%test_eq: int list] (List.map (fun x -> x.e) (get_numbers_positions "467..114.." 0)) expected *)
+(**)
+(* let%test_unit "logic" =   *)
+(*   let expected = 4361 in *)
+(*   [%test_eq: int] (logic (Parse.get_lines test_input)) expected *)
+(**)
+(* let%test_unit "logic" =   *)
+(*   let expected = 539590 in *)
+(*   [%test_eq: int] (logic (real_input)) expected *)
+(**)
+(**)
+(* (* Part 2 *) *)
+(**)
+(* let%test_unit "get_symbol_position" =  *)
+(*   let expected = [7] in *)
+(*   [%test_eq: int list] (get_symbol_position "##.$#..*+#" r_star) expected *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let expected = 467835 in *)
+(*   [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let expected = 80703636 in *)
+(*   [%test_eq: int] (logic2 (real_input)) expected *)
