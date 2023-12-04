@@ -45,4 +45,3 @@ ligne 3. avec un point
 "
 let expected_lines = ["ligne 1"; "ligne 2, avec une virgule"; "ligne 3. avec un point"]
 let%test_unit "get_lines" = [%test_eq: string list] (get_lines test_input) expected_lines
-
