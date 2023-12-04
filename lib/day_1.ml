@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 
 let real_input = Parse.read "../inputs/day_1.txt"
@@ -90,11 +90,11 @@ let run () = print_int 142
 (* Part 1 *)
 
 (* let test_input = " *)
-   (* 1abc2 *)
-   (* pqr3stu8vwx *)
-   (* a1b2c3d4e5f *)
-   (* treb7uchet *)
-   (* " *)
+   (*    1abc2 *)
+   (*    pqr3stu8vwx *)
+   (*    a1b2c3d4e5f *)
+   (*    treb7uchet *)
+   (*    " *)
 (* let expected = 142 *)
 (* let%test_unit "logic" = [%test_eq: int] (logic (Parse.get_lines test_input)) expected *)
 
@@ -106,14 +106,14 @@ let run () = print_int 142
 (* let%test_unit "f" = [%test_eq: string] (f ("one", "1") "oneabc2") ("1abc2") *)
 (**)
 (* let test_input = " *)
-   (* two1nine *)
-   (* eightwothree *)
-   (* abcone2threexyz *)
-   (* xtwone3four *)
-   (* 4nineeightseven2 *)
-   (* zoneight234 *)
-   (* 7pqrstsixteen *)
-   (* " *)
+   (*    two1nine *)
+   (*    eightwothree *)
+   (*    abcone2threexyz *)
+   (*    xtwone3four *)
+   (*    4nineeightseven2 *)
+   (*    zoneight234 *)
+   (*    7pqrstsixteen *)
+   (*    " *)
 (**)
 (* let expected = 29 + 83 + 13 + 24 + 42 + 14 + 76 *)
 (* let%test_unit "logic" = [%test_eq: int] (logic (Parse.get_lines test_input)) expected *)
