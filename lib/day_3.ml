@@ -2,10 +2,10 @@ open Ppx_compare_lib.Builtin
 open Sexplib.Std
 open List
 
-let regexp_for_symbol = Str.regexp "[^0-9.]"
-let regexp_for_star = Str.regexp "[*]"
+let r_symbols = Str.regexp "[^0-9.]"
+let r_star = Str.regexp "[*]"
 
-let get_symbol_position (line: string) :  int list = 
+let get_symbol_position (line: string) (reg: Str.regexp) :  int list = 
   let size = String.length line in
 
   let  rec search (index: int) (acc:  int list):  int list = 
@@ -13,7 +13,7 @@ let get_symbol_position (line: string) :  int list =
 
     else
       try
-        let new_index = Str.search_forward (regexp_for_symbol) line index in
+        let new_index = Str.search_forward (reg) line index in
         search (new_index + 1) (new_index :: acc)
       with Not_found -> acc
   in
@@ -21,12 +21,12 @@ let get_symbol_position (line: string) :  int list =
   result
 ;;
 
-let get_all_symbol_positions (lines: string list):  (int * int) list = 
+let get_all_symbol_positions (lines: string list) (reg: Str.regexp):  (int * int) list = 
   let rec get_positions (lines: string list) (line_index: int) (acc: (int * int) list): (int * int) list = 
     match lines with
     | [] -> acc
     | line:: rest -> 
-      let positions = get_symbol_position line in
+      let positions = get_symbol_position line reg in
       let new_acc = List.fold_left (fun acc pos -> (pos, line_index) :: acc) acc positions in
       get_positions rest (line_index + 1) new_acc
   in
@@ -93,12 +93,29 @@ let is_number_touching_symbol (number: num) (symbol: (int * int)): bool =
 let is_numer_touching_any_symbol (symbols: (int * int) list) (number: num): bool = 
   List.exists (fun symbol -> is_number_touching_symbol number symbol) symbols
 
+let get_gear_power (numbers: num list) (symbol: (int * int)): int = 
+  let touched_numbers = List.filter (fun number -> is_number_touching_symbol number symbol) numbers in
+  if (List.length touched_numbers <> 2) then 0
+  else
+    let number1 = List.nth touched_numbers 0 in
+    let number2 = List.nth touched_numbers 1 in
+    number1.value * number2.value
+;;
+
 let logic (lines: string list): int  = 
-  let symbols = get_all_symbol_positions lines in
+  let symbols = get_all_symbol_positions lines r_symbols in
   let numbers = get_all_numbers_positions lines in
   let filter = is_numer_touching_any_symbol symbols in
   let numbers = List.filter filter numbers in
   List.fold_left (fun acc x -> acc + x.value) 0 numbers
+;;
+
+let logic2 (lines: string list): int  = 
+  let symbols = get_all_symbol_positions lines r_star in
+  let numbers = get_all_numbers_positions lines in
+  let callback = get_gear_power numbers in
+  let gear_powers = List.map callback symbols in
+  List.fold_left (fun acc x -> acc + x) 0 gear_powers
 ;;
 
 let real_input = Parse.read "../inputs/day_3.txt"
@@ -110,6 +127,7 @@ let run () =
 (* Part 1 *)
 
 (* I add % symbol to check the end of the numbers or correctly calulated *)
+(* I add * symbol to check it is not take into account in the second part *)
 let test_input = "
 467..114.% 
 ...*......
@@ -118,14 +136,14 @@ let test_input = "
 617*......
 .....+.58.
 ..592.....
-......755.
+......755*
 ...$.*....
-.664.598..
+.664.598.. 
 "
 
 let%test_unit "get_symbol_position" = 
   let expected = [9; 8; 7; 4; 3; 1; 0] in
-  [%test_eq: int list] (get_symbol_position "##.$#..*+#") expected
+  [%test_eq: int list] (get_symbol_position "##.$#..*+#" r_symbols) expected
 
 let%test_unit "get_numbers_positions" =
   let expected = [114; 467] in
@@ -147,4 +165,17 @@ let%test_unit "logic" =
   let expected = 539590 in
   [%test_eq: int] (logic (real_input)) expected
 
+
 (* Part 2 *)
+
+let%test_unit "get_symbol_position" = 
+  let expected = [7] in
+  [%test_eq: int list] (get_symbol_position "##.$#..*+#" r_star) expected
+
+let%test_unit "logic2" =
+  let expected = 467835 in
+  [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected
+
+let%test_unit "logic2" =
+  let expected = 80703636 in
+  [%test_eq: int] (logic2 (real_input)) expected
