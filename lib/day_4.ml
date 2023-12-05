@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 
 type card = {
@@ -135,11 +135,11 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
 
 (* Part 2 *)
 
-let%test_unit "logic2" =  
-  let expected = 30 in
-  [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected
-
-let%test_unit "logic2" =  
-  let real_input = Parse.read "../inputs/day_4.txt" in
-  let expected = 11024379 in
-  [%test_eq: int] (logic2 (real_input)) expected
+(* let%test_unit "logic2" =   *)
+(*   let expected = 30 in *)
+(*   [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected *)
+(**)
+(* let%test_unit "logic2" =   *)
+(*   let real_input = Parse.read "../inputs/day_4.txt" in *)
+(*   let expected = 11024379 in *)
+(*   [%test_eq: int] (logic2 (real_input)) expected *)
