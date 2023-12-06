@@ -27,6 +27,19 @@ let get_seeds (line: string): int list =
   in seeds
 ;;
 
+let get_seeds_ranges (line: string): (int* int) list = 
+  let parts = get_seeds line in
+  (* group by 2 *)
+  let rec loop (parts: int list) (ranges: (int * int) list): (int * int) list = 
+    match parts with
+    | [] -> ranges
+    | start::range::rest -> 
+      let new_ranges = (start, start + range)::ranges in
+      loop rest new_ranges
+    | _ -> failwith "invalid input"
+  in loop parts []
+;;
+
 let get_transform (line: string): transform = 
   let parts = String.split_on_char ' ' line in
   let values = List.map int_of_string parts in
@@ -40,9 +53,33 @@ let get_transform (line: string): transform =
   }
 ;;
 
+let get_reverse_tranform (line: string): transform = 
+  let parts = String.split_on_char ' ' line in
+  let values = List.map int_of_string parts in
+  let s = List.nth values 0 in
+  let destination = List.nth values 1 in
+  let range = List.nth values 2 in
+  {
+    s = s;
+    e = (s + range);
+    inc = destination - s;
+  }
+;;
+
 let get_stage (lines: string list): stage = 
   let id = List.nth lines 0 in
-  let transforms = List.map get_transform (List.tl lines) in
+  let transforms = List.tl lines
+                   |> List.map get_transform in
+  {
+    id = id;
+    transforms = transforms;
+  }
+;;
+
+let get_reverse_stage (lines: string list): stage = 
+  let id = List.nth lines 0 in
+  let transforms = List.tl lines
+                   |> List.map get_reverse_tranform in
   {
     id = id;
     transforms = transforms;
@@ -93,10 +130,10 @@ let combine_stages (stages: stage list) (origin: int): int =
 let logic (lines: string list): int  = 
   (* parsing *)
   let seeds = get_seeds (List.hd lines) in
-  let stages_lines = List.tl (List.tl lines) in
-  let stages = split_by_empty_line (stages_lines) in
-  let stages = List.map get_stage stages in
-
+  let stages = List.tl lines
+               |> List.tl
+               |> split_by_empty_line 
+               |> List.map get_stage in
   (* logic *)
   (* !This is really amazing to be able to do just this! *)
   let transformation = combine_stages stages in
@@ -104,9 +141,33 @@ let logic (lines: string list): int  =
   List.fold_left min max_int results 
 ;;
 
+let logic2 (lines: string list): int  = 
+  (* parsing *)
+  let ranges = get_seeds_ranges (List.hd lines) in
+  let rev_stages = List.tl lines
+                   |> List.tl
+                   |> split_by_empty_line 
+                   |> List.rev
+                   |> List.map get_reverse_stage in
+
+  (* logic *)
+  let transformation = combine_stages rev_stages in
+  let rec loop (i: int): int = 
+    let result = transformation i in
+    let is_in_range = List.exists (fun (s, e) -> result >= s && result <= e) ranges in 
+    if is_in_range then
+      i
+    else if i > 100000000 then 
+      failwith "too big"
+    else 
+      loop (i + 1)
+  in 
+  loop 0
+;;
+
 let run (path: string) = 
   let input = Parse.read path in
-  let result = logic input in 
+  let result = logic2 input in 
   print_int result
 ;;
 
@@ -153,3 +214,21 @@ humidity-to-location map:
 let%test_unit "logic" =  
   let expected = 35 in
   [%test_eq: int] (logic (Parse.get_lines test_input)) expected
+
+
+(* let%test_unit "logic" =   *)
+(*   let real_input = Parse.read "../inputs/day_5.txt" in *)
+(*   let expected =  240320250 in *)
+(*   [%test_eq: int] (logic (real_input)) expected *)
+
+(* tests - Part 2 *)
+
+
+(* let%test_unit "logic" =   *)
+(*   let expected = 46 in *)
+(*   [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected *)
+
+let%test_unit "logic" =  
+  let real_input = Parse.read "../inputs/day_5.txt" in
+  let expected =  28580589 in
+  [%test_eq: int] (logic2 (real_input)) expected
