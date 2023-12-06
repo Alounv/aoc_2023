@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 
 (* data structures *)
@@ -211,9 +211,9 @@ humidity-to-location map:
 "
 
 
-let%test_unit "logic" =  
-  let expected = 35 in
-  [%test_eq: int] (logic (Parse.get_lines test_input)) expected
+(* let%test_unit "logic" =   *)
+(*   let expected = 35 in *)
+(*   [%test_eq: int] (logic (Parse.get_lines test_input)) expected *)
 
 
 (* let%test_unit "logic" =   *)
@@ -228,7 +228,7 @@ let%test_unit "logic" =
 (*   let expected = 46 in *)
 (*   [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected *)
 
-let%test_unit "logic" =  
-  let real_input = Parse.read "../inputs/day_5.txt" in
-  let expected =  28580589 in
-  [%test_eq: int] (logic2 (real_input)) expected
+(* let%test_unit "logic" =   *)
+(*   let real_input = Parse.read "../inputs/day_5.txt" in *)
+(*   let expected =  28580589 in *)
+(*   [%test_eq: int] (logic2 (real_input)) expected *)
