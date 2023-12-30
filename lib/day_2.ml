@@ -2,75 +2,83 @@
 (* open Sexplib.Std *)
 open List
 
+type rgb = { red : int; green : int; blue : int }
 
-type  rgb = {
-  red: int;
-  green: int;
-  blue: int;
-}
-
-let parse_game (game: string) : rgb= 
+let parse_game (game : string) : rgb =
   let game = String.trim game in
   let colors = String.split_on_char ',' game in
   let colors = List.map String.trim colors in
   let colors = List.map (String.split_on_char ' ') colors in
-  let colors = List.map (fun x -> (int_of_string (List.nth x 0), List.nth x 1)) colors in
-
-  let colors = List.map (fun c -> 
-      let color = List.find_opt (fun x -> snd x = c) colors in
-      match color with
-      | Some x -> fst x
-      | None -> 0
-    ) ["red"; "green"; "blue"]
+  let colors =
+    List.map (fun x -> (int_of_string (List.nth x 0), List.nth x 1)) colors
   in
 
-  { red = List.nth colors 0; green = List.nth colors 1; blue = List.nth colors 2}
-;;
+  let colors =
+    List.map
+      (fun c ->
+        let color = List.find_opt (fun x -> snd x = c) colors in
+        match color with Some x -> fst x | None -> 0)
+      [ "red"; "green"; "blue" ]
+  in
 
-type line = {
-  id: int;
-  values: rgb;
-}
+  {
+    red = List.nth colors 0;
+    green = List.nth colors 1;
+    blue = List.nth colors 2;
+  }
 
-let get_line_max (line: string) : line =
+type line = { id : int; values : rgb }
+
+let get_line_max (line : string) : line =
   let line = String.split_on_char ':' line in
   let id = List.nth line 0 in
   let id = String.split_on_char ' ' id in
   let id = List.nth id 1 in
 
-  let games =  List.nth line 1 in
+  let games = List.nth line 1 in
   let games = String.split_on_char ';' games in
   let games = List.map parse_game games in
 
-  let values = List.fold_left (fun acc x -> {
-        red = max acc.red x.red;
-        green = max acc.green x.green;
-        blue = max acc.blue x.blue
-      }) {red = 0; green = 0; blue = 0} games in
+  let values =
+    List.fold_left
+      (fun acc x ->
+        {
+          red = max acc.red x.red;
+          green = max acc.green x.green;
+          blue = max acc.blue x.blue;
+        })
+      { red = 0; green = 0; blue = 0 }
+      games
+  in
 
-  {id = int_of_string id; values}
-;;
+  { id = int_of_string id; values }
 
-
-let logic (lines: string list) (input: rgb) : int  = 
+let logic (lines : string list) (input : rgb) : int =
   let lines = List.map get_line_max lines in
-  let lines = List.filter (fun x -> x.values.red <= input.red && x.values.green <= input.green && x.values.blue <= input.blue) lines in
+  let lines =
+    List.filter
+      (fun x ->
+        x.values.red <= input.red
+        && x.values.green <= input.green
+        && x.values.blue <= input.blue)
+      lines
+  in
   let sum_of_ids = List.fold_left (fun acc x -> acc + x.id) 0 lines in
   sum_of_ids
-;;
 
-let logic2 (lines: string list): int  = 
+let logic2 (lines : string list) : int =
   let lines = List.map get_line_max lines in
-  let lines = List.map (fun x -> x.values.red * x.values.green * x.values.blue) lines in
+  let lines =
+    List.map (fun x -> x.values.red * x.values.green * x.values.blue) lines
+  in
   let sum = List.fold_left (fun acc x -> acc + x) 0 lines in
   sum
-;;
 
 let real_input = Parse.read "../inputs/day_2.txt"
-let run () = 
-  let result = logic real_input {red = 12; green = 13; blue = 14} in
+
+let run () =
+  let result = logic real_input { red = 12; green = 13; blue = 14 } in
   print_int result
-;;
 
 (* Part 1 *)
 
