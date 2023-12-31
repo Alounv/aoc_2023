@@ -36,10 +36,35 @@ let get_repartition (hand : char list) : repartition =
   in
   aux hand (Hashtbl.create 5)
 
+let get_max_char (repartition : repartition) : char =
+  let sorted_repartition =
+    repartition |> Hashtbl.to_seq |> List.of_seq
+    |> List.sort (fun (_, v1) (_, v2) -> v2 - v1)
+  in
+  sorted_repartition |> hd |> fst
+
+let correct_repartition_with_jokers (repartition : repartition) : repartition =
+  let jokers_count =
+    Hashtbl.find_opt repartition 'J' |> Option.value ~default:0
+  in
+  let len = Hashtbl.length repartition in
+  let max_char = get_max_char repartition in
+
+  if jokers_count = 0 || (len == 1 && max_char = 'J') then repartition
+  else
+    let () = Hashtbl.remove repartition 'J' in
+    let next_max_char = get_max_char repartition in
+    let max_char = if max_char = 'J' then next_max_char else max_char in
+
+    let max_char_value =
+      Hashtbl.find_opt repartition max_char |> Option.value ~default:0
+    in
+    Hashtbl.replace repartition max_char (jokers_count + max_char_value);
+    repartition
+
 (* logic *)
 
 let get_highest_figure (repartition : repartition) : figures =
-  (* repartition |> Hashtbl.iter (fun char v -> print_int v; print_string " "; print_char char; print_endline ""); *)
   let entries = repartition |> Hashtbl.to_seq |> List.of_seq in
   let sorted_entries = List.sort (fun (_, v1) (_, v2) -> v2 - v1) entries in
   let first = hd sorted_entries in
@@ -79,7 +104,7 @@ let get_card_value (card : char) : int =
   | '8' -> 8
   | '9' -> 9
   | 'T' -> 10
-  | 'J' -> 11
+  | 'J' -> 1
   | 'Q' -> 12
   | 'K' -> 13
   | 'A' -> 14
@@ -93,7 +118,8 @@ let get_hands_values (hands : (char list * int) list) :
     | [] -> acc
     | (hand, bid) :: tl ->
         let repartition = get_repartition hand in
-        let figure = get_highest_figure repartition in
+        let new_repartition = correct_repartition_with_jokers repartition in
+        let figure = get_highest_figure new_repartition in
         let value = get_figure_value figure in
         aux tl ((hand, value, bid) :: acc)
   in
@@ -131,9 +157,6 @@ let add_index_to_bid (bids : int list) : (int * int) list =
 let logic (input : string list) : int =
   let hands = map get_hand_bid input in
   let hands_values = get_hands_values hands in
-  (* print_endline ""; *)
-  (* hands_values |> iter (fun (hand, value, bid) -> hand |> iter print_char; print_string " "; print_int value; print_string " "; print_int bid; print_endline "";); *)
-  (* print_endline ""; *)
   let sorted_hands = List.sort compare_hands hands_values in
   let sorted_bids = sorted_hands |> map (fun (_, _, bid) -> bid) in
 
@@ -155,11 +178,22 @@ let run (path : string) =
 
 let test_input = "\n32T3K 765\nT55J5 684\nKK677 28\nKTJJT 220\nQQQJA 483\n"
 
+(* let%test_unit "logic" = *)
+(*   let expected = 6440 in *)
+(*   [%test_eq: int] (logic (Parse.get_lines test_input)) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let real_input = Parse.read "../inputs/day_7.txt" in *)
+(*   let expected = 248422077 in *)
+(*   [%test_eq: int] (logic real_input) expected *)
+
+(* tests - Part 2 *)
+
 let%test_unit "logic" =
-  let expected = 6440 in
+  let expected = 5905 in
   [%test_eq: int] (logic (Parse.get_lines test_input)) expected
 
 let%test_unit "logic" =
   let real_input = Parse.read "../inputs/day_7.txt" in
-  let expected = 248422077 in
+  let expected = 249817836 in
   [%test_eq: int] (logic real_input) expected
