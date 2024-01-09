@@ -13,10 +13,6 @@ type line = int list
 let get_line (line : string) : line =
   line |> String.split_on_char ' ' |> map int_of_string
 
-(* logic *)
-
-(* logic 1 *)
-
 let get_next_line (line : line) : line =
   let rec aux (line : line) (acc : line) : line =
     match line with
@@ -38,6 +34,8 @@ let get_lines (line : line) : line list =
 
   aux lines
 
+(* logic 1 *)
+
 let get_lines_result (lines : line list) : int =
   let rec aux (lines : line list) (acc : int) : int =
     match lines with
@@ -52,15 +50,33 @@ let get_line_result (line : line) : int =
   let lines = get_lines line in
   get_lines_result lines
 
-(* lines |> map (fun x -> x |> fold_left ( + ) 0) |> fold_left ( + ) 0 0 *)
-
 let logic (input : string list) : int =
   let lines = input |> map get_line in
   lines |> map get_line_result |> fold_left ( + ) 0
 
-(* tests - Part 1 *)
-
 (* logic 2 *)
+
+let get_lines_result2 (lines : line list) : int =
+  let lines = ref lines in
+  let acc = ref 0 in
+  for i = 0 to length !lines - 2 do
+    let line = nth !lines i in
+    let next_line = nth !lines (i + 1) in
+    let first = line |> List.hd in
+    let next_first = next_line |> List.hd in
+    let new_value = next_first - first in
+    lines := !lines |> mapi (fun j x -> if j = i + 1 then new_value :: x else x);
+    acc := new_value
+  done;
+  !acc
+
+let get_line_result2 (line : line) : int =
+  let lines = get_lines line in
+  get_lines_result2 lines
+
+let logic2 (input : string list) : int =
+  let lines = input |> map get_line in
+  lines |> map get_line_result2 |> fold_left ( + ) 0
 
 (* main *)
 
@@ -81,3 +97,14 @@ let%test_unit "logic" =
   let real_input = Parse.read "../inputs/day_9.txt" in
   let expected = 1762065988 in
   [%test_eq: int] (logic real_input) expected
+
+(* tests - Part 2 *)
+
+let%test_unit "logic" =
+  let expected = 2 in
+  [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected
+
+let%test_unit "logic" =
+  let real_input = Parse.read "../inputs/day_9.txt" in
+  let expected = 1066 in
+  [%test_eq: int] (logic2 real_input) expected
