@@ -8,6 +8,15 @@
   (pps ppx_inline_test ppx_assert)))
 
 (library
+ (name utilities)
+ (modules utilities))
+ ; (libraries sexplib)
+ ; (inline_tests
+ ;  (deps ../inputs/parse.txt))
+ ; (preprocess
+ ;  (pps ppx_inline_test ppx_assert)))
+
+(library
  (name day_1)
  (modules day_1)
  (libraries parse str)
@@ -91,7 +100,7 @@
 (library
  (name day_10)
  (modules day_10)
- (libraries parse str)
+ (libraries parse str utilities)
  (inline_tests
   (deps ../inputs/day_10.txt))
  (preprocess

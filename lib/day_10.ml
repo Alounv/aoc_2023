@@ -1,7 +1,14 @@
 open Ppx_compare_lib.Builtin
 open Sexplib.Std
 open List
+open Utilities
 
+let flood_char = 'o'
+let empty_char = ' '
+
+(* input parsing *)
+
+(* input *)
 let test_input = Parse.get_lines "7-F7-\n.FJ|7\nSJLL7\n|F--J\nLJ.LJ\n"
 
 let test_input_2 =
@@ -19,8 +26,6 @@ let test_input_2 =
 
 (* data structures *)
 
-type coord = { x : int; y : int }
-type path = coord list
 type pipe = F | J | L | Seven | V | H | Nothing
 type pipe_opt = pipe option
 
@@ -35,45 +40,15 @@ type direction = Top | Right | Bottom | Left
 
 (* utilities *)
 
-let print_path (path : path) : unit =
-  print_endline " ------ ";
-
-  let result =
-    path
-    |> List.map (fun x -> Printf.sprintf "(%d, %d)" x.x x.y)
-    |> String.concat " "
-  in
-  Printf.printf "%s\n" result;
-
-  print_endline "";
-  let max_x = path |> List.map (fun x -> x.x) |> List.fold_left max 0 in
-  let max_y = path |> List.map (fun x -> x.y) |> List.fold_left max 0 in
-  let rec aux (path : path) (y : int) : unit =
-    if y > max_y then ()
-    else
-      let rec aux2 (path : path) (x : int) : unit =
-        if x > max_x then ()
-        else
-          let is_in_path = path |> List.exists (fun p -> p.x = x && p.y = y) in
-          if is_in_path then print_string "o" else print_string ".";
-          aux2 path (x + 1)
-      in
-      aux2 path 0;
-      print_endline "";
-      aux path (y + 1)
-  in
-  aux path 0;
-  print_endline ""
-
-let coord_from_dir (point : coord) (dir : direction) : coord =
+let coord_from_dir (point : point) (dir : direction) : point =
   match dir with
   | Top -> { x = point.x; y = point.y - 1 }
   | Right -> { x = point.x + 1; y = point.y }
   | Bottom -> { x = point.x; y = point.y + 1 }
   | Left -> { x = point.x - 1; y = point.y }
 
-let get_start (lines : string list) : coord =
-  let rec aux (lines : string list) (y : int) : coord =
+let get_start (lines : string list) : point =
+  let rec aux (lines : string list) (y : int) : point =
     match lines with
     | [] -> { x = 0; y = 0 }
     | line :: lines ->
@@ -97,24 +72,24 @@ let char_from_pipe (pipe : pipe) : char =
   | F -> 'F'
   | J -> 'J'
   | L -> 'L'
-  | Seven -> 'S'
+  | Seven -> '7'
   | V -> '|'
   | H -> '-'
   | Nothing -> '.'
 
-let pipe_from_coord (lines : string t) (coord : coord) : pipe_opt =
-  if coord.y < 0 || coord.y >= List.length lines then None
+let pipe_from_coord (lines : string t) (point : point) : pipe_opt =
+  if point.y < 0 || point.y >= List.length lines then None
   else
-    let line = List.nth_opt lines coord.y in
+    let line = List.nth_opt lines point.y in
     if line = None then None
     else
       let line = Option.get line in
-      if coord.x < 0 || coord.x >= String.length line then None
+      if point.x < 0 || point.x >= String.length line then None
       else
-        let char = String.get line coord.x in
+        let char = String.get line point.x in
         Some (char |> pipe_from_char)
 
-let get_close_points (lines : string t) (point : coord) : neighbors =
+let get_close_points (lines : string t) (point : point) : neighbors =
   {
     top = pipe_from_coord lines { x = point.x; y = point.y - 1 };
     bottom = pipe_from_coord lines { x = point.x; y = point.y + 1 };
@@ -146,7 +121,7 @@ let get_is_valid (current : pipe) (next : pipe) (dir : direction) : bool =
     let opposite_dir = get_opposite_dir dir in
     List.mem opposite_dir next_dirs
 
-let replace_start (lines : string t) (start : coord) : string t =
+let replace_start (lines : string t) (start : point) : string t =
   let n = get_close_points lines start in
   let is_top =
     match n.top with None -> false | Some pipe -> is_valid Bottom pipe
@@ -160,11 +135,12 @@ let replace_start (lines : string t) (start : coord) : string t =
   let is_right =
     match n.right with None -> false | Some pipe -> is_valid Left pipe
   in
+
   let new_start =
     if is_right && is_bottom then F
-    else if is_left && is_bottom then J
+    else if is_left && is_bottom then Seven
     else if is_right && is_top then L
-    else if is_left && is_top then Seven
+    else if is_left && is_top then J
     else if is_top && is_bottom then V
     else if is_left && is_right then H
     else failwith "invalid start"
@@ -178,9 +154,6 @@ let replace_start (lines : string t) (start : coord) : string t =
         |> String.mapi (fun x char ->
             if x = start.x && y = start.y then new_start else char))
   in
-  (* print_endline ""; *)
-  (* lines |> List.iter (fun x -> print_endline x); *)
-  (* print_endline ""; *)
   lines
 
 (* logic *)
@@ -207,8 +180,8 @@ let get_next_from_neigbors (current : pipe) (neighbors : neighbors)
   in
   aux possible_dirs
 
-let get_next (lines : string t) (point : coord) (from : direction) :
-  pipe * coord * direction =
+let get_next (lines : string t) (point : point) (from : direction) :
+  pipe * point * direction =
   let neighbors = get_close_points lines point in
   let current = pipe_from_coord lines point in
   if current = None then failwith "no current"
@@ -218,9 +191,8 @@ let get_next (lines : string t) (point : coord) (from : direction) :
     let next_coord = coord_from_dir point dir in
     (next, next_coord, dir)
 
-let get_path (lines : string t) (start : coord) : path =
-  let lines_with_start = replace_start lines start in
-  let rec aux (lines : string t) (points : coord t) (from : direction) : path =
+let get_path (lines : string t) (start : point) (start_dir : direction) : path =
+  let rec aux (lines : string t) (points : point t) (from : direction) : path =
     let last = points |> List.hd in
     let _, next_coord, next_dir = get_next lines last from in
 
@@ -230,23 +202,79 @@ let get_path (lines : string t) (start : coord) : path =
       let from = get_opposite_dir next_dir in
       aux lines (next_coord :: points) from
   in
-  aux lines_with_start [ start ] Bottom
+  aux lines [ start ] start_dir
 
 (* logic 1 *)
 
 let logic (lines : string t) : int =
   let start = get_start lines in
-  let path = get_path lines start in
+  let lines = replace_start lines start in
+
+  let path = get_path lines start Bottom in
   let path_length = List.length path in
   path_length / 2
 
 (* logic 2 *)
+type status = In | Out | Wall
+
+let count_in_line (line : line) : int =
+  let full_list = line |> Array.to_seq |> List.of_seq in
+
+  (* let length = List.length full_list in *)
+  let rec aux (list : char t) (count : int) (status : int) (last_turn : char) :
+    int =
+    match list with
+    | [] -> count
+    | char :: rest -> (
+        match char with
+        | '|' -> aux rest count (status + 1) last_turn
+        | '-' -> aux rest count status last_turn
+        | ' ' ->
+          let count = if status mod 2 = 1 then count + 1 else count in
+          aux rest count status last_turn
+        | 'F' | 'L' ->
+          let status = status in
+          aux rest count status char
+        | 'J' ->
+          let status = if last_turn = 'F' then status + 1 else status in
+          aux rest count status char
+        | '7' ->
+          let status = if last_turn = 'L' then status + 1 else status in
+          aux rest count status char
+        | _ -> aux rest count status last_turn)
+  in
+
+  let count = aux full_list 0 0 ' ' in
+  count
+
+let count_map (map : map) : int =
+  let rec aux (map : line t) (count : int) : int =
+    match map with
+    | [] -> count
+    | line :: rest ->
+      let count = count + count_in_line line in
+      aux rest count
+  in
+
+  let map = map |> Array.to_seq |> List.of_seq in
+  aux map 0
 
 let logic2 (lines : string t) : int =
   let start = get_start lines in
-  let path = get_path lines start in
-  print_path path;
-  0
+  let lines = replace_start lines start in
+
+  let map = map_from_strings lines in
+  let path = get_path lines start Left in
+
+  let map = map_from_path_and_map path map empty_char in
+  let map = add_outside_points map empty_char in
+  let map = flood map flood_char empty_char in
+  (* let map = add_outside_points map empty_char in *)
+  print_map map;
+
+  (* let map = flood map flood_char empty_char in *)
+  (* print_map map; *)
+  count_map map
 
 (* main *)
 
@@ -257,49 +285,103 @@ let run (_path : string) =
 
 (* tests - Part 1 *)
 
-let%test_unit "start" =
-  let result = get_start test_input in
-  let string_result = Printf.sprintf "%d %d" result.x result.y in
-  [%test_eq: string] string_result "0 2"
-
-let%test_unit "get_next" =
-  let input = replace_start test_input { x = 0; y = 2 } in
-  let result = get_next input { x = 0; y = 2 } Bottom in
-  let pipe, coord, _ = result in
-  let pipe = char_from_pipe pipe in
-  let string_result = Printf.sprintf "%c %d %d" pipe coord.x coord.y in
-  [%test_eq: string] string_result "J 1 2"
-
-let%test_unit "get_next" =
-  let input = replace_start test_input { x = 0; y = 2 } in
-  let result = get_next input { x = 1; y = 2 } Left in
-  let pipe, coord, _ = result in
-  let pipe = char_from_pipe pipe in
-  let string_result = Printf.sprintf "%c %d %d" pipe coord.x coord.y in
-  [%test_eq: string] string_result "F 1 1"
-
-let%test_unit "get_path" =
-  let result = get_path test_input { x = 0; y = 2 } in
-  let string_result =
-    result
-    |> List.map (fun x -> Printf.sprintf "(%d, %d)" x.x x.y)
-    |> String.concat " "
-  in
-  [%test_eq: string] string_result
-    "(0, 3) (0, 4) (1, 4) (1, 3) (2, 3) (3, 3) (4, 3) (4, 2) (3, 2) (3, 1) (3, \
-     0) (2, 0) (2, 1) (1, 1) (1, 2) (0, 2)"
-
-let%test_unit "logic" =
-  let expected = 8 in
-  [%test_eq: int] (logic test_input) expected
-
-let%test_unit "logic" =
-  let real_input = Parse.read "../inputs/day_10.txt" in
-  let expected = 7097 in
-  [%test_eq: int] (logic real_input) expected
+(* let%test_unit "start" = *)
+(*   let result = get_start test_input in *)
+(*   let string_result = Printf.sprintf "%d %d" result.x result.y in *)
+(*   [%test_eq: string] string_result "0 2" *)
+(**)
+(* let%test_unit "get_next" = *)
+(*   let input = replace_start test_input { x = 0; y = 2 } in *)
+(*   let result = get_next input { x = 0; y = 2 } Bottom in *)
+(*   let pipe, point, _ = result in *)
+(*   let pipe = char_from_pipe pipe in *)
+(*   let string_result = Printf.sprintf "%c %d %d" pipe point.x point.y in *)
+(*   [%test_eq: string] string_result "J 1 2" *)
+(**)
+(* let%test_unit "get_next" = *)
+(*   let input = replace_start test_input { x = 0; y = 2 } in *)
+(*   let result = get_next input { x = 1; y = 2 } Left in *)
+(*   let pipe, point, _ = result in *)
+(*   let pipe = char_from_pipe pipe in *)
+(*   let string_result = Printf.sprintf "%c %d %d" pipe point.x point.y in *)
+(*   [%test_eq: string] string_result "F 1 1" *)
+(**)
+(* let%test_unit "get_path" = *)
+(*   let result = get_path test_input { x = 0; y = 2 } in *)
+(*   let string_result = *)
+(*     result *)
+(*     |> List.map (fun x -> Printf.sprintf "(%d, %d)" x.x x.y) *)
+(*     |> String.concat " " *)
+(*   in *)
+(*   [%test_eq: string] string_result *)
+(* "(0, 3) (0, 4) (1, 4) (1, 3) (2, 3) (3, 3) (4, 3) (4, 2) (3, 2) (3, 1) (3, \ *)
+   (*      0) (2, 0) (2, 1) (1, 1) (1, 2) (0, 2)" *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let expected = 8 in *)
+(*   [%test_eq: int] (logic test_input) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let real_input = Parse.read "../inputs/day_10.txt" in *)
+(*   let expected = 7097 in *)
+(*   [%test_eq: int] (logic real_input) expected *)
 
 (* tests - Part 2 *)
 
+let%test_unit "count_in_line" =
+  let line = "| |   | |" |> String.to_seq |> List.of_seq |> Array.of_list in
+  let result = count_in_line line in
+  [%test_eq: int] result 2
+
+let%test_unit "count_in_line" =
+  let line = "| FJ   | |" |> String.to_seq |> List.of_seq |> Array.of_list in
+  let result = count_in_line line in
+  [%test_eq: int] result 2
+
+let%test_unit "count_in_line" =
+  let line = "| L7   | |" |> String.to_seq |> List.of_seq |> Array.of_list in
+  let result = count_in_line line in
+  [%test_eq: int] result 2
+
+let%test_unit "count_in_line" =
+  let line = "| L7   L7 |" |> String.to_seq |> List.of_seq |> Array.of_list in
+  let result = count_in_line line in
+  [%test_eq: int] result 2
+
+let%test_unit "count_in_line" =
+  let line = "| L7   FJ |" |> String.to_seq |> List.of_seq |> Array.of_list in
+  let result = count_in_line line in
+  [%test_eq: int] result 2
+
+let%test_unit "count_in_line" =
+  let line =
+    "| L------7   L--7 |" |> String.to_seq |> List.of_seq |> Array.of_list
+  in
+  let result = count_in_line line in
+  [%test_eq: int] result 2
+
+let%test_unit "count_in_line" =
+  let line =
+    "| L------7L-7L-7   L--7 |" |> String.to_seq |> List.of_seq |> Array.of_list
+  in
+  let result = count_in_line line in
+  [%test_eq: int] result 2
+
+let%test_unit "count_in_line" =
+  let line = "| L-----J |" |> String.to_seq |> List.of_seq |> Array.of_list in
+  let result = count_in_line line in
+  [%test_eq: int] result 2
+
+let%test_unit "count_in_line" =
+  let line = "| F-----7 |" |> String.to_seq |> List.of_seq |> Array.of_list in
+  let result = count_in_line line in
+  [%test_eq: int] result 2
+
 let%test_unit "logic2" =
-  let expected = 8 in
-  [%test_eq: int] (logic2 test_input) expected
+  let expected = 10 in
+  [%test_eq: int] (logic2 test_input_2) expected
+
+let%test_unit "logic2" =
+  let real_input = Parse.read "../inputs/day_10.txt" in
+  let expected = 355 in
+  [%test_eq: int] (logic2 real_input) expected
