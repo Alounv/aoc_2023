@@ -114,3 +114,12 @@
   (deps ../inputs/day_11.txt))
  (preprocess
   (pps ppx_inline_test ppx_assert)))
+
+(library
+ (name Day_12)
+ (modules day_12)
+ (libraries parse str utilities)
+ (inline_tests
+  (deps ../inputs/day_12.txt))
+ (preprocess
+  (pps ppx_inline_test ppx_assert)))
