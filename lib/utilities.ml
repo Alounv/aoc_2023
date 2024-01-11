@@ -14,6 +14,19 @@ let get_path_max (path : path) : point =
   |> List.fold_left
     (fun acc p -> { x = max acc.x p.x; y = max acc.y p.y })
     { x = 0; y = 0 }
+
+let get_map_max (map : map) : point =
+  let max_x = Array.length map.(0) in
+  let max_y = Array.length map in
+  { x = max_x - 1; y = max_y - 1 }
+
+let get_column (map : map) (x : int) : char list =
+  let max_y = Array.length map in
+  let rec aux (y : int) (acc : char list) : char list =
+    if y >= max_y then acc else aux (y + 1) (map.(y).(x) :: acc)
+  in
+  aux 0 []
+
 (* get map from string list *)
 
 let map_from_strings (strings : string list) : map =
@@ -26,7 +39,20 @@ let map_from_strings (strings : string list) : map =
   |> List.iteri (fun y s -> s |> String.iteri (fun x c -> map.(y).(x) <- c));
   map
 
-(* get map from string list *)
+(* get path from map *)
+
+let get_coords (map : map) (char : char) : point list =
+  let max_x = Array.length map.(0) in
+  let max_y = Array.length map in
+  let rec aux (x : int) (y : int) (acc : point list) : point list =
+    if y >= max_y then acc
+    else if x >= max_x then aux 0 (y + 1) acc
+    else
+      let c = map.(y).(x) in
+      let acc = if c <> char then acc else { x; y } :: acc in
+      aux (x + 1) y acc
+  in
+  aux 0 0 []
 
 (* get map from path *)
 
@@ -56,6 +82,14 @@ let print_map (map : map) : unit =
          |> Array.map (fun x -> Printf.sprintf "%c" x)
          |> Array.to_list |> String.concat ""));
   print_endline ""
+
+let string_from_map (map : map) : string =
+  map
+  |> Array.map (fun x ->
+      x
+      |> Array.map (fun x -> Printf.sprintf "%c" x)
+      |> Array.to_list |> String.concat "")
+  |> Array.to_list |> String.concat "\n"
 
 (* add outside line of empty_char *)
 
