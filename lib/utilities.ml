@@ -1,0 +1,112 @@
+open List
+
+(* data *)
+
+type point = { x : int; y : int }
+type path = point t
+type line = char array
+type map = line array
+
+(* get dimensions of path area *)
+
+let get_path_max (path : path) : point =
+  path
+  |> List.fold_left
+    (fun acc p -> { x = max acc.x p.x; y = max acc.y p.y })
+    { x = 0; y = 0 }
+(* get map from string list *)
+
+let map_from_strings (strings : string list) : map =
+  let max_x =
+    List.fold_left (fun acc s -> max acc (String.length s)) 0 strings
+  in
+  let max_y = List.length strings in
+  let map = Array.make_matrix max_y max_x ' ' in
+  strings
+  |> List.iteri (fun y s -> s |> String.iteri (fun x c -> map.(y).(x) <- c));
+  map
+
+(* get map from string list *)
+
+(* get map from path *)
+
+let map_from_path (path : path) (path_char : char) (empty_char : char) : map =
+  let { x = max_x; y = max_y } = get_path_max path in
+  let map = Array.make_matrix (max_y + 1) (max_x + 1) empty_char in
+  path |> List.iter (fun p -> map.(p.y).(p.x) <- path_char);
+  map
+
+(* get map from path and map *)
+
+let map_from_path_and_map (path : path) (initial_map : map) (empty_char : char)
+  : map =
+  let { x = max_x; y = max_y } = get_path_max path in
+  let map = Array.make_matrix (max_y + 1) (max_x + 1) empty_char in
+  path |> List.iter (fun p -> map.(p.y).(p.x) <- initial_map.(p.y).(p.x));
+  map
+
+(* print map  *)
+
+let print_map (map : map) : unit =
+  print_endline "";
+  map
+  |> Array.iter (fun x ->
+      print_endline
+        (x
+         |> Array.map (fun x -> Printf.sprintf "%c" x)
+         |> Array.to_list |> String.concat ""));
+  print_endline ""
+
+(* add outside line of empty_char *)
+
+let add_outside_points (map : map) (empty_char : char) : map =
+  let max_x = Array.length map.(0) in
+  let max_y = Array.length map in
+
+  let new_map = Array.make_matrix (max_y + 2) (max_x + 2) empty_char in
+
+  for y = 0 to max_y - 1 do
+    for x = 0 to max_x - 1 do
+      new_map.(y + 1).(x + 1) <- map.(y).(x)
+    done
+  done;
+  new_map
+
+(* get map from file *)
+
+(* flood fill *)
+
+let flood (map : map) (flood_char : char) empty_char : map =
+  let max_x = Array.length map.(0) in
+  let max_y = Array.length map in
+
+  let rec aux (x : int) (y : int) =
+    if x < 0 || x >= max_x || y < 0 || y >= max_y then ()
+    else
+      let char = map.(y).(x) in
+      if char <> empty_char then ()
+      else (
+        map.(y).(x) <- flood_char;
+        aux (x + 1) y;
+        aux (x - 1) y;
+        aux x (y + 1);
+        aux x (y - 1))
+  in
+  aux 0 0;
+  map
+
+(* count chars *)
+
+let count_char_in_map (map : map) (char : char) : int =
+  let max_x = Array.length map.(0) in
+  let max_y = Array.length map in
+
+  let rec aux (x : int) (y : int) (count : int) : int =
+    if y >= max_y then count
+    else if x >= max_x then aux 0 (y + 1) count
+    else
+      let c = map.(y).(x) in
+      let count = if c <> char then count else count + 1 in
+      aux (x + 1) y count
+  in
+  aux 0 0 0
