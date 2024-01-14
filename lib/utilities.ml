@@ -161,3 +161,46 @@ let transpose_map (map : map) : map =
     done
   done;
   new_map
+
+(* rotate map *)
+
+let rotate_map_90 (map : map) : map =
+  let n_rows, n_cols = get_map_dim map in
+  let new_map = Array.make_matrix n_rows n_cols ' ' in
+  for i = 0 to n_rows - 1 do
+    for j = 0 to n_cols - 1 do
+      new_map.(i).(j) <- map.(n_rows - j - 1).(i)
+    done
+  done;
+  new_map
+
+let rotate_map_180 (map : map) : map =
+  let n_rows, n_cols = get_map_dim map in
+  let new_map = Array.make_matrix n_rows n_cols ' ' in
+  for i = 0 to n_rows - 1 do
+    for j = 0 to n_cols - 1 do
+      new_map.(i).(j) <- map.(n_rows - i - 1).(n_cols - j - 1)
+    done
+  done;
+  new_map
+
+let rotate_map_270 (map : map) : map =
+  let n_rows, n_cols = get_map_dim map in
+  let new_map = Array.make_matrix n_rows n_cols ' ' in
+  for i = 0 to n_rows - 1 do
+    for j = 0 to n_cols - 1 do
+      new_map.(i).(j) <- map.(j).(n_cols - i - 1)
+    done
+  done;
+  new_map
+
+(* clone map *)
+let clone_map (map : map) : map =
+  let n_rows, n_cols = get_map_dim map in
+  let new_map = Array.make_matrix n_rows n_cols ' ' in
+  for i = 0 to n_rows - 1 do
+    for j = 0 to n_cols - 1 do
+      new_map.(i).(j) <- map.(i).(j)
+    done
+  done;
+  new_map

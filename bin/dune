@@ -1,4 +1,4 @@
 (executable
  (public_name aoc_2023)
  (name main)
- (libraries day_12 parse))
+ (libraries day_14 parse))
