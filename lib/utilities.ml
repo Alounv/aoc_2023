@@ -20,6 +20,11 @@ let get_map_max (map : map) : point =
   let max_y = Array.length map in
   { x = max_x - 1; y = max_y - 1 }
 
+let get_map_dim (map : map) : int * int =
+  let n_cols = Array.length map.(0) in
+  let n_rows = Array.length map in
+  (n_rows, n_cols)
+
 let get_column (map : map) (x : int) : char list =
   let max_y = Array.length map in
   let rec aux (y : int) (acc : char list) : char list =
@@ -144,3 +149,15 @@ let count_char_in_map (map : map) (char : char) : int =
       aux (x + 1) y count
   in
   aux 0 0 0
+
+(* transpose map *)
+
+let transpose_map (map : map) : map =
+  let n_rows, n_cols = get_map_dim map in
+  let new_map = Array.make_matrix n_cols n_rows ' ' in
+  for i = 0 to n_rows - 1 do
+    for j = 0 to n_cols - 1 do
+      new_map.(j).(i) <- map.(i).(j)
+    done
+  done;
+  new_map
