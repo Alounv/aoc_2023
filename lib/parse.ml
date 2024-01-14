@@ -20,12 +20,14 @@ let remove_first_empty_line lines =
   | [] -> []
   | first :: rest -> if first = "" then rest else lines
 
-let get_lines string_input =
-  let lines = String.split_on_char '\n' string_input in
+let get_lines_from_sep (string_input : string) (sep : char) : string list =
+  let lines = String.split_on_char sep string_input in
   (* remove first and last empty lines *)
   let lines = remove_first_empty_line lines in
   let lines = remove_first_empty_line (List.rev lines) in
   List.rev lines
+
+let get_lines string_input = get_lines_from_sep string_input '\n'
 
 (* test *)
 
