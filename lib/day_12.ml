@@ -95,6 +95,8 @@ let get_possible_starts (line : char array) (size : int) (prev_group : group)
 
 (* main logic *)
 
+let cache_count = ref 0
+
 let count_paths (line : char array) (groups_sizes : int list) : int =
   let cache : (string, int) Hashtbl.t = Hashtbl.create 100_000 in
   let len = Array.length line in
@@ -109,6 +111,7 @@ let count_paths (line : char array) (groups_sizes : int list) : int =
   let store (key : string) (value : int) : unit = Hashtbl.add cache key value in
 
   let rec recursive (groups_sizes : int list) (prev_path : path) : int =
+    cache_count := !cache_count + 1;
     (* check validity *)
     let prev_group = List.hd prev_path in
     let prev_group_end = prev_group.size + prev_group.start - 1 in
@@ -200,10 +203,12 @@ let logic2 (input : string list) =
        acc + paths)
     0
 
-let run (_path : string) =
-  (* let input = Parse.read path in *)
-  let result = logic2 test_input in
-  print_int result
+let run (path : string) =
+  let input = Parse.read path in
+  let result = logic2 input in
+  print_int result;
+  print_newline ();
+  print_int !cache_count
 
 (* tests - Part 1 *)
 
@@ -271,6 +276,7 @@ let%test_unit "logic" =
   [%test_eq: int] (logic real_input) expected
 
 (* tests - Part 2 *)
+(* Lucas's logic :: Thanks !!! *)
 
 let%test_unit "get_paths" =
   let input = "?###???????? 3,2,1" in
