@@ -1,4 +1,5 @@
 open List
+(* open ANSITerminal *)
 
 (* data *)
 
@@ -78,6 +79,8 @@ let map_from_path_and_map (path : path) (initial_map : map) (empty_char : char)
 
 (* print map  *)
 
+type style = { chars : char list; color : int }
+
 let print_map (map : map) : unit =
   print_endline "";
   map
@@ -85,6 +88,20 @@ let print_map (map : map) : unit =
       print_endline
         (x
          |> Array.map (fun x -> Printf.sprintf "%c" x)
+         |> Array.to_list |> String.concat ""));
+  print_endline ""
+
+let print_map_with_colors (styles : style t) (map : map) : unit =
+  print_endline "";
+  map
+  |> Array.iter (fun x ->
+      print_endline
+        (x
+         |> Array.map (fun x ->
+             match find_opt (fun s -> mem x s.chars) styles with
+             | Some { color; _ } ->
+               Printf.sprintf "\027[38;5;%dm%c\027[0m" color x
+             | None -> Printf.sprintf "%c" x)
          |> Array.to_list |> String.concat ""));
   print_endline ""
 
@@ -150,6 +167,20 @@ let count_char_in_map (map : map) (char : char) : int =
   in
   aux 0 0 0
 
+let count_chars_in_map (map : map) (chars : char list) : int =
+  let max_x = Array.length map.(0) in
+  let max_y = Array.length map in
+
+  let rec aux (x : int) (y : int) (count : int) : int =
+    if y >= max_y then count
+    else if x >= max_x then aux 0 (y + 1) count
+    else
+      let c = map.(y).(x) in
+      let count = if mem c chars then count + 1 else count in
+      aux (x + 1) y count
+  in
+  aux 0 0 0
+
 (* transpose map *)
 
 let transpose_map (map : map) : map =
@@ -204,3 +235,8 @@ let clone_map (map : map) : map =
     done
   done;
   new_map
+
+(* is out of bounds *)
+
+let is_out_of_bounds (map : map) (p : point) : bool =
+  p.x < 0 || p.x >= Array.length map.(0) || p.y < 0 || p.y >= Array.length map
