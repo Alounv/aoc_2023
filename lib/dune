@@ -9,8 +9,8 @@
 
 (library
  (name utilities)
- (modules utilities))
- ; (libraries sexplib)
+ (modules utilities) 
+ (libraries ANSITerminal))
  ; (inline_tests
  ;  (deps ../inputs/parse.txt))
  ; (preprocess
@@ -148,5 +148,14 @@
  (libraries parse str utilities)
  (inline_tests
   (deps ../inputs/day_15.txt))
+ (preprocess
+  (pps ppx_inline_test ppx_assert)))
+
+(library
+ (name day_16)
+ (modules day_16)
+ (libraries parse str utilities)
+ (inline_tests
+  (deps ../inputs/day_16.txt))
  (preprocess
   (pps ppx_inline_test ppx_assert)))
