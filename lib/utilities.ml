@@ -5,6 +5,7 @@ open List
 
 type point = { x : int; y : int }
 type path = point t
+type path_int = (point * int) t
 type line = char array
 type map = line array
 
@@ -112,6 +113,36 @@ let string_from_map (map : map) : string =
       |> Array.map (fun x -> Printf.sprintf "%c" x)
       |> Array.to_list |> String.concat "")
   |> Array.to_list |> String.concat "\n"
+
+(* print path  *)
+
+let draw_path (path : path) : unit =
+  let { x = max_x; y = max_y } = get_path_max path in
+  let map = Array.make_matrix (max_y + 1) (max_x + 1) ' ' in
+  path
+  |> List.iteri (fun i p ->
+      if i = 0 then map.(p.y).(p.x) <- 'S'
+      else
+        let prev = List.nth_opt path (i - 1) in
+        let dir =
+          match prev with
+          | None -> ' '
+          | Some prev -> (
+              match (p.x - prev.x, p.y - prev.y) with
+              | 0, 1 -> 'v'
+              | 0, -1 -> '^'
+              | 1, 0 -> '>'
+              | -1, 0 -> '<'
+              | _ -> ' ')
+        in
+        map.(p.y).(p.x) <- dir);
+  print_map map
+
+let print_path (path : path) : unit =
+  path |> List.iter (fun p -> Printf.printf "%d-%d\n" p.x p.y)
+
+let print_path_int (path : path_int) : unit =
+  path |> List.iter (fun (p, i) -> Printf.printf "%d-%d: %d\n" p.x p.y i)
 
 (* add outside line of empty_char *)
 
@@ -226,6 +257,7 @@ let rotate_map_270 (map : map) : map =
   new_map
 
 (* clone map *)
+
 let clone_map (map : map) : map =
   let n_rows, n_cols = get_map_dim map in
   let new_map = Array.make_matrix n_rows n_cols ' ' in
@@ -240,3 +272,19 @@ let clone_map (map : map) : map =
 
 let is_out_of_bounds (map : map) (p : point) : bool =
   p.x < 0 || p.x >= Array.length map.(0) || p.y < 0 || p.y >= Array.length map
+
+(* neighbors *)
+
+let get_neighbours (pos : point) : point list =
+  let { x; y } = pos in
+  let up = { x; y = y - 1 } in
+  let down = { x; y = y + 1 } in
+  let left = { x = x - 1; y } in
+  let right = { x = x + 1; y } in
+  [ up; down; left; right ]
+
+(* int_of_pos *)
+let int_of_pos (map : map) (pos : point) : int =
+  let char = map.(pos.y).(pos.x) in
+  let value = int_of_char char - 48 in
+  value
