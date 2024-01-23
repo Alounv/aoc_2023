@@ -17,6 +17,12 @@ let get_path_max (path : path) : point =
     (fun acc p -> { x = max acc.x p.x; y = max acc.y p.y })
     { x = 0; y = 0 }
 
+let get_path_min (path : path) : point =
+  path
+  |> List.fold_left
+    (fun acc p -> { x = min acc.x p.x; y = min acc.y p.y })
+    { x = 0; y = 0 }
+
 let get_map_max (map : map) : point =
   let max_x = Array.length map.(0) in
   let max_y = Array.length map in
