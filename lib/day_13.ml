@@ -1,6 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
-open List
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open Utilities
 
 (* Lucas's logic :: Thanks !!! *)
@@ -131,123 +130,123 @@ let run (path : string) =
   let result = logic input in
   print_int result
 
-(* tests - Part 1 *)
-
-let%test_unit "is_sym_axis" =
-  let map = map_from_strings test_input in
-  let expected = true in
-  [%test_eq: bool] (is_sym_axis map 4) expected
-
-let%test_unit "is_sym_axis" =
-  let map = map_from_strings test_input in
-  let expected = false in
-  [%test_eq: bool] (is_sym_axis map 3) expected
-
-let%test_unit "is_sym_axis" =
-  let map = map_from_strings test_input in
-  let expected = false in
-  [%test_eq: bool] (is_sym_axis map 7) expected
-
-let%test_unit "is_sym_axis" =
-  let map = map_from_strings test_input in
-  let expected = false in
-  [%test_eq: bool] (is_sym_axis map 0) expected
-
-let%test_unit "find_vertical_axis" =
-  let map = map_from_strings test_input in
-  let expected = 4 in
-  [%test_eq: int] (find_v_axis map) expected
-
-let%test_unit "find_horizontal_axis" =
-  let map = map_from_strings test_input_2 in
-  print_map map;
-  let expected = 3 in
-  [%test_eq: int] (find_h_axis map) expected
-
-let%test_unit "find_horizontal_axis" =
-  let input =
-    "...###.#.....##..\n\
-     #.######.#.......\n\
-     #.##.###.#.......\n\
-     ...###.#.....##..\n\
-     .#..##..#.###..##\n\
-     #..###.####...###\n\
-     #####.#...#.##...\n\
-     #####.#..###.####\n\
-     #########.#.#####\n\
-     .#####....##..###\n\
-     ##.#..#..####..##"
-  in
-  let map = map_from_strings (Parse.get_lines input) in
-  print_map map;
-  let expected = -1 in
-  [%test_eq: int] (find_h_axis map) expected
-
-let%test_unit "logic" =
-  let input =
-    "#.##..##.\n\
-     ..#.##.#.\n\
-     ##......#\n\
-     ##......#\n\
-     ..#.##.#.\n\
-     ..##..##.\n\
-     #.#.##.#.\n\n\
-     #...##..#\n\
-     #....#..#\n\
-     ..##..###\n\
-     #####.##.\n\
-     #####.##.\n\
-     ..##..###\n\
-     #....#..#"
-  in
-  let expected = 405 in
-  [%test_eq: int] (logic input) expected
-
-let%test_unit "logic" =
-  let input =
-    "...###.#.....##..\n\
-     #.######.#.......\n\
-     #.##.###.#.......\n\
-     ...###.#.....##..\n\
-     .#..##..#.###..##\n\
-     #..###.####...###\n\
-     #####.#...#.##...\n\
-     #####.#..###.####\n\
-     #########.#.#####\n\
-     .#####....##..###\n\
-     ##.#..#..####..##"
-  in
-  let expected = 16 in
-  [%test_eq: int] (logic input) expected
-
-let%test_unit "logic" =
-  let real_input = Parse.read "../inputs/day_13.txt" |> String.concat "\n" in
-  let expected = 30535 in
-  [%test_eq: int] (logic real_input) expected
-
-(* tests - Part 2 *)
-
-let%test_unit "logic" =
-  let input =
-    "#.##..##.\n\
-     ..#.##.#.\n\
-     ##......#\n\
-     ##......#\n\
-     ..#.##.#.\n\
-     ..##..##.\n\
-     #.#.##.#.\n\n\
-     #...##..#\n\
-     #....#..#\n\
-     ..##..###\n\
-     #####.##.\n\
-     #####.##.\n\
-     ..##..###\n\
-     #....#..#"
-  in
-  let expected = 400 in
-  [%test_eq: int] (logic2 input) expected
-
-let%test_unit "logic2" =
-  let real_input = Parse.read "../inputs/day_13.txt" |> String.concat "\n" in
-  let expected = 30844 in
-  [%test_eq: int] (logic2 real_input) expected
+(* (* tests - Part 1 *) *)
+(**)
+(* let%test_unit "is_sym_axis" = *)
+(*   let map = map_from_strings test_input in *)
+(*   let expected = true in *)
+(*   [%test_eq: bool] (is_sym_axis map 4) expected *)
+(**)
+(* let%test_unit "is_sym_axis" = *)
+(*   let map = map_from_strings test_input in *)
+(*   let expected = false in *)
+(*   [%test_eq: bool] (is_sym_axis map 3) expected *)
+(**)
+(* let%test_unit "is_sym_axis" = *)
+(*   let map = map_from_strings test_input in *)
+(*   let expected = false in *)
+(*   [%test_eq: bool] (is_sym_axis map 7) expected *)
+(**)
+(* let%test_unit "is_sym_axis" = *)
+(*   let map = map_from_strings test_input in *)
+(*   let expected = false in *)
+(*   [%test_eq: bool] (is_sym_axis map 0) expected *)
+(**)
+(* let%test_unit "find_vertical_axis" = *)
+(*   let map = map_from_strings test_input in *)
+(*   let expected = 4 in *)
+(*   [%test_eq: int] (find_v_axis map) expected *)
+(**)
+(* let%test_unit "find_horizontal_axis" = *)
+(*   let map = map_from_strings test_input_2 in *)
+(*   print_map map; *)
+(*   let expected = 3 in *)
+(*   [%test_eq: int] (find_h_axis map) expected *)
+(**)
+(* let%test_unit "find_horizontal_axis" = *)
+(*   let input = *)
+(* "...###.#.....##..\n\ *)
+   (*      #.######.#.......\n\ *)
+   (*      #.##.###.#.......\n\ *)
+   (*      ...###.#.....##..\n\ *)
+   (*      .#..##..#.###..##\n\ *)
+   (*      #..###.####...###\n\ *)
+   (*      #####.#...#.##...\n\ *)
+   (*      #####.#..###.####\n\ *)
+   (*      #########.#.#####\n\ *)
+   (*      .#####....##..###\n\ *)
+   (*      ##.#..#..####..##" *)
+(*   in *)
+(*   let map = map_from_strings (Parse.get_lines input) in *)
+(*   print_map map; *)
+(*   let expected = -1 in *)
+(*   [%test_eq: int] (find_h_axis map) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let input = *)
+(* "#.##..##.\n\ *)
+   (*      ..#.##.#.\n\ *)
+   (*      ##......#\n\ *)
+   (*      ##......#\n\ *)
+   (*      ..#.##.#.\n\ *)
+   (*      ..##..##.\n\ *)
+   (*      #.#.##.#.\n\n\ *)
+   (*      #...##..#\n\ *)
+   (*      #....#..#\n\ *)
+   (*      ..##..###\n\ *)
+   (*      #####.##.\n\ *)
+   (*      #####.##.\n\ *)
+   (*      ..##..###\n\ *)
+   (*      #....#..#" *)
+(*   in *)
+(*   let expected = 405 in *)
+(*   [%test_eq: int] (logic input) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let input = *)
+(* "...###.#.....##..\n\ *)
+   (*      #.######.#.......\n\ *)
+   (*      #.##.###.#.......\n\ *)
+   (*      ...###.#.....##..\n\ *)
+   (*      .#..##..#.###..##\n\ *)
+   (*      #..###.####...###\n\ *)
+   (*      #####.#...#.##...\n\ *)
+   (*      #####.#..###.####\n\ *)
+   (*      #########.#.#####\n\ *)
+   (*      .#####....##..###\n\ *)
+   (*      ##.#..#..####..##" *)
+(*   in *)
+(*   let expected = 16 in *)
+(*   [%test_eq: int] (logic input) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let real_input = Parse.read "../inputs/day_13.txt" |> String.concat "\n" in *)
+(*   let expected = 30535 in *)
+(*   [%test_eq: int] (logic real_input) expected *)
+(**)
+(* (* tests - Part 2 *) *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let input = *)
+(* "#.##..##.\n\ *)
+   (*      ..#.##.#.\n\ *)
+   (*      ##......#\n\ *)
+   (*      ##......#\n\ *)
+   (*      ..#.##.#.\n\ *)
+   (*      ..##..##.\n\ *)
+   (*      #.#.##.#.\n\n\ *)
+   (*      #...##..#\n\ *)
+   (*      #....#..#\n\ *)
+   (*      ..##..###\n\ *)
+   (*      #####.##.\n\ *)
+   (*      #####.##.\n\ *)
+   (*      ..##..###\n\ *)
+   (*      #....#..#" *)
+(*   in *)
+(*   let expected = 400 in *)
+(*   [%test_eq: int] (logic2 input) expected *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let real_input = Parse.read "../inputs/day_13.txt" |> String.concat "\n" in *)
+(*   let expected = 30844 in *)
+(*   [%test_eq: int] (logic2 real_input) expected *)

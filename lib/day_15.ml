@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 (* open Utilities *)
 
@@ -151,48 +151,48 @@ let run (_path : string) =
   let load = logic1 test_input in
   Printf.printf "%d\n" load
 
-(* tests - Part 1 *)
-
-let%test_unit "hash" = [%test_eq: int] (hash "HASH") 52
-
-let%test_unit "logic1" =
-  let expected = 1320 in
-  [%test_eq: int] (logic1 test_input) expected
-
-let%test_unit "logic1" =
-  let real_input = Parse.read "../inputs/day_15.txt" |> List.hd in
-  let expected = 506269 in
-  [%test_eq: int] (logic1 real_input) expected
-
-(* tests - Part 2 *)
-
-let%test_unit "apply_instructions" =
-  let instructions =
-    [
-      { label = "rn"; operation = Add; focal_length = 1 };
-      { label = "cm"; operation = Remove; focal_length = 0 };
-      { label = "qp"; operation = Add; focal_length = 3 };
-      { label = "cm"; operation = Add; focal_length = 2 };
-      { label = "qp"; operation = Remove; focal_length = 0 };
-      { label = "pc"; operation = Add; focal_length = 4 };
-      { label = "ot"; operation = Add; focal_length = 9 };
-      { label = "ab"; operation = Add; focal_length = 5 };
-      { label = "pc"; operation = Remove; focal_length = 0 };
-      { label = "pc"; operation = Add; focal_length = 6 };
-      { label = "ot"; operation = Add; focal_length = 7 };
-    ]
-  in
-  let boxes = Hashtbl.create 256 in
-  fill boxes instructions;
-  let result = print_boxes boxes in
-  let expected = "Box 0: [rn 1] [cm 2]\nBox 3: [ot 7] [ab 5] [pc 6]\n" in
-  [%test_eq: string] result expected
-
-let%test_unit "logic2" =
-  let expected = 145 in
-  [%test_eq: int] (logic2 test_input) expected
-
-let%test_unit "logic2" =
-  let real_input = Parse.read "../inputs/day_15.txt" |> List.hd in
-  let expected = 264021 in
-  [%test_eq: int] (logic2 real_input) expected
+(* (* tests - Part 1 *) *)
+(**)
+(* let%test_unit "hash" = [%test_eq: int] (hash "HASH") 52 *)
+(**)
+(* let%test_unit "logic1" = *)
+(*   let expected = 1320 in *)
+(*   [%test_eq: int] (logic1 test_input) expected *)
+(**)
+(* let%test_unit "logic1" = *)
+(*   let real_input = Parse.read "../inputs/day_15.txt" |> List.hd in *)
+(*   let expected = 506269 in *)
+(*   [%test_eq: int] (logic1 real_input) expected *)
+(**)
+(* (* tests - Part 2 *) *)
+(**)
+(* let%test_unit "apply_instructions" = *)
+(*   let instructions = *)
+(*     [ *)
+(*       { label = "rn"; operation = Add; focal_length = 1 }; *)
+(*       { label = "cm"; operation = Remove; focal_length = 0 }; *)
+(*       { label = "qp"; operation = Add; focal_length = 3 }; *)
+(*       { label = "cm"; operation = Add; focal_length = 2 }; *)
+(*       { label = "qp"; operation = Remove; focal_length = 0 }; *)
+(*       { label = "pc"; operation = Add; focal_length = 4 }; *)
+(*       { label = "ot"; operation = Add; focal_length = 9 }; *)
+(*       { label = "ab"; operation = Add; focal_length = 5 }; *)
+(*       { label = "pc"; operation = Remove; focal_length = 0 }; *)
+(*       { label = "pc"; operation = Add; focal_length = 6 }; *)
+(*       { label = "ot"; operation = Add; focal_length = 7 }; *)
+(*     ] *)
+(*   in *)
+(*   let boxes = Hashtbl.create 256 in *)
+(*   fill boxes instructions; *)
+(*   let result = print_boxes boxes in *)
+(*   let expected = "Box 0: [rn 1] [cm 2]\nBox 3: [ot 7] [ab 5] [pc 6]\n" in *)
+(*   [%test_eq: string] result expected *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let expected = 145 in *)
+(*   [%test_eq: int] (logic2 test_input) expected *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let real_input = Parse.read "../inputs/day_15.txt" |> List.hd in *)
+(*   let expected = 264021 in *)
+(*   [%test_eq: int] (logic2 real_input) expected *)

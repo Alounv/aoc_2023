@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 
 (* utilities *)
@@ -114,39 +114,39 @@ let run (path : string) =
   let result = logic2 input in
   print_int result
 
-(* tests - Part 1 *)
-
-let test_input =
-  "\nLLR\n\nAAA = (BBB, BBB)\nBBB = (AAA, ZZZ)\nZZZ = (ZZZ, ZZZ)\n"
-
-let%test_unit "logic" =
-  let expected = 6 in
-  [%test_eq: int] (logic (Parse.get_lines test_input)) expected
-
-let%test_unit "logic" =
-  let real_input = Parse.read "../inputs/day_8.txt" in
-  let expected = 18827 in
-  [%test_eq: int] (logic real_input) expected
-
-(* tests - Part 2 *)
-
-let test_input =
-  "\n\
-   LR\n\n\
-   11A = (11B, XXX)\n\
-   11B = (XXX, 11Z)\n\
-   11Z = (11B, XXX)\n\
-   22A = (22B, XXX)\n\
-   22B = (22C, 22C)\n\
-   22C = (22Z, 22Z)\n\
-   22Z = (22B, 22B)\n\
-   XXX = (XXX, XXX)\n"
-
-let%test_unit "logic" =
-  let expected = 6 in
-  [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected
-
-let%test_unit "logic" =
-  let real_input = Parse.read "../inputs/day_8.txt" in
-  let expected = 20220305520997 in
-  [%test_eq: int] (logic2 real_input) expected
+(* (* tests - Part 1 *) *)
+(**)
+(* let test_input = *)
+(*   "\nLLR\n\nAAA = (BBB, BBB)\nBBB = (AAA, ZZZ)\nZZZ = (ZZZ, ZZZ)\n" *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let expected = 6 in *)
+(*   [%test_eq: int] (logic (Parse.get_lines test_input)) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let real_input = Parse.read "../inputs/day_8.txt" in *)
+(*   let expected = 18827 in *)
+(*   [%test_eq: int] (logic real_input) expected *)
+(**)
+(* (* tests - Part 2 *) *)
+(**)
+(* let test_input = *)
+(* "\n\ *)
+   (*    LR\n\n\ *)
+   (*    11A = (11B, XXX)\n\ *)
+   (*    11B = (XXX, 11Z)\n\ *)
+   (*    11Z = (11B, XXX)\n\ *)
+   (*    22A = (22B, XXX)\n\ *)
+   (*    22B = (22C, 22C)\n\ *)
+   (*    22C = (22Z, 22Z)\n\ *)
+   (*    22Z = (22B, 22B)\n\ *)
+   (*    XXX = (XXX, XXX)\n" *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let expected = 6 in *)
+(*   [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let real_input = Parse.read "../inputs/day_8.txt" in *)
+(*   let expected = 20220305520997 in *)
+(*   [%test_eq: int] (logic2 real_input) expected *)

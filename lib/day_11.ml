@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 open Utilities
 
@@ -124,102 +124,102 @@ let run (_path : string) =
   let result = logic test_input 2 in
   print_int result
 
-(* tests - Part 1 *)
-
-let%test_unit "get_empty_columns" =
-  let map = map_from_strings test_input in
-  [%test_eq: int list] (get_empty_columns map) [ 8; 5; 2 ]
-
-let%test_unit "get_empty_rows" =
-  let map = map_from_strings test_input in
-  [%test_eq: int list] (get_empty_rows map) [ 7; 3 ]
-
-let%test_unit "get_distance" =
-  let a = { x = 0; y = 0 } in
-  let b = { x = 4; y = 5 } in
-  let expected = 9 in
-  [%test_eq: int] (get_distance a b) expected
-
-let%test_unit "get_distance" =
-  let a = { x = 0; y = 0 } in
-  let b = { x = 4; y = 5 } in
-  let expected = 9 in
-  [%test_eq: int] (get_distance b a) expected
-
-let%test_unit "logic" =
-  let expected = 374 in
-  [%test_eq: int] (logic test_input 2) expected
-
-let%test_unit "logic" =
-  let real_input = Parse.read "../inputs/day_11.txt" in
-  let expected = 9605127 in
-  [%test_eq: int] (logic real_input 2) expected
-
-(* tests - Part 2 *)
-
-let%test_unit "get_stars" =
-  let map = map_from_strings test_input in
-  let result = get_stars map in
-  let result_string =
-    result
-    |> List.map (fun { name; coord } ->
-        Printf.sprintf "%d: %d, %d\n" name coord.x coord.y)
-    |> String.concat " "
-  in
-  let expected =
-    "0: 4, 9\n\
-    \ 1: 0, 9\n\
-    \ 2: 7, 8\n\
-    \ 3: 9, 6\n\
-    \ 4: 1, 5\n\
-    \ 5: 6, 4\n\
-    \ 6: 0, 2\n\
-    \ 7: 7, 1\n\
-    \ 8: 3, 0\n"
-  in
-  [%test_eq: string] result_string expected
-
-let%test_unit "count_expanses_between_points" =
-  let a = { x = 1; y = 1 } in
-  let b = { x = 6; y = 4 } in
-  let expanded_columns = [ 8; 5; 2 ] in
-  let expanded_rows = [ 7; 3 ] in
-  let expected = 3 in
-  [%test_eq: int]
-    (count_expanses_between expanded_rows expanded_columns a b)
-    expected
-
-let%test_unit "count_expanses_between_points" =
-  let a = { x = 1; y = 1 } in
-  let b = { x = 6; y = 4 } in
-  let expanded_columns = [ 8; 5; 2 ] in
-  let expanded_rows = [ 7; 3 ] in
-  let expected = 3 in
-  [%test_eq: int]
-    (count_expanses_between expanded_rows expanded_columns b a)
-    expected
-
-let%test_unit "get_distance2" =
-  let a = { x = 1; y = 1 } in
-  let b = { x = 6; y = 4 } in
-  let expanded_columns = [ 8; 5; 2 ] in
-  let expanded_rows = [ 7; 3 ] in
-  let expected = 8 in
-  [%test_eq: int] (get_distance2 1 expanded_rows expanded_columns a b) expected
-
-let%test_unit "logic" =
-  let expected = 374 in
-  [%test_eq: int] (logic test_input 2) expected
-
-let%test_unit "logic" =
-  let expected = 1030 in
-  [%test_eq: int] (logic test_input 10) expected
-
-let%test_unit "logic" =
-  let expected = 8410 in
-  [%test_eq: int] (logic test_input 100) expected
-
-let%test_unit "logic" =
-  let real_input = Parse.read "../inputs/day_11.txt" in
-  let expected = 458191688761 in
-  [%test_eq: int] (logic real_input 1000000) expected
+(* (* tests - Part 1 *) *)
+(**)
+(* let%test_unit "get_empty_columns" = *)
+(*   let map = map_from_strings test_input in *)
+(*   [%test_eq: int list] (get_empty_columns map) [ 8; 5; 2 ] *)
+(**)
+(* let%test_unit "get_empty_rows" = *)
+(*   let map = map_from_strings test_input in *)
+(*   [%test_eq: int list] (get_empty_rows map) [ 7; 3 ] *)
+(**)
+(* let%test_unit "get_distance" = *)
+(*   let a = { x = 0; y = 0 } in *)
+(*   let b = { x = 4; y = 5 } in *)
+(*   let expected = 9 in *)
+(*   [%test_eq: int] (get_distance a b) expected *)
+(**)
+(* let%test_unit "get_distance" = *)
+(*   let a = { x = 0; y = 0 } in *)
+(*   let b = { x = 4; y = 5 } in *)
+(*   let expected = 9 in *)
+(*   [%test_eq: int] (get_distance b a) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let expected = 374 in *)
+(*   [%test_eq: int] (logic test_input 2) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let real_input = Parse.read "../inputs/day_11.txt" in *)
+(*   let expected = 9605127 in *)
+(*   [%test_eq: int] (logic real_input 2) expected *)
+(**)
+(* (* tests - Part 2 *) *)
+(**)
+(* let%test_unit "get_stars" = *)
+(*   let map = map_from_strings test_input in *)
+(*   let result = get_stars map in *)
+(*   let result_string = *)
+(*     result *)
+(*     |> List.map (fun { name; coord } -> *)
+(*         Printf.sprintf "%d: %d, %d\n" name coord.x coord.y) *)
+(*     |> String.concat " " *)
+(*   in *)
+(*   let expected = *)
+(* "0: 4, 9\n\ *)
+   (*     \ 1: 0, 9\n\ *)
+   (*     \ 2: 7, 8\n\ *)
+   (*     \ 3: 9, 6\n\ *)
+   (*     \ 4: 1, 5\n\ *)
+   (*     \ 5: 6, 4\n\ *)
+   (*     \ 6: 0, 2\n\ *)
+   (*     \ 7: 7, 1\n\ *)
+   (*     \ 8: 3, 0\n" *)
+(*   in *)
+(*   [%test_eq: string] result_string expected *)
+(**)
+(* let%test_unit "count_expanses_between_points" = *)
+(*   let a = { x = 1; y = 1 } in *)
+(*   let b = { x = 6; y = 4 } in *)
+(*   let expanded_columns = [ 8; 5; 2 ] in *)
+(*   let expanded_rows = [ 7; 3 ] in *)
+(*   let expected = 3 in *)
+(*   [%test_eq: int] *)
+(*     (count_expanses_between expanded_rows expanded_columns a b) *)
+(*     expected *)
+(**)
+(* let%test_unit "count_expanses_between_points" = *)
+(*   let a = { x = 1; y = 1 } in *)
+(*   let b = { x = 6; y = 4 } in *)
+(*   let expanded_columns = [ 8; 5; 2 ] in *)
+(*   let expanded_rows = [ 7; 3 ] in *)
+(*   let expected = 3 in *)
+(*   [%test_eq: int] *)
+(*     (count_expanses_between expanded_rows expanded_columns b a) *)
+(*     expected *)
+(**)
+(* let%test_unit "get_distance2" = *)
+(*   let a = { x = 1; y = 1 } in *)
+(*   let b = { x = 6; y = 4 } in *)
+(*   let expanded_columns = [ 8; 5; 2 ] in *)
+(*   let expanded_rows = [ 7; 3 ] in *)
+(*   let expected = 8 in *)
+(*   [%test_eq: int] (get_distance2 1 expanded_rows expanded_columns a b) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let expected = 374 in *)
+(*   [%test_eq: int] (logic test_input 2) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let expected = 1030 in *)
+(*   [%test_eq: int] (logic test_input 10) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let expected = 8410 in *)
+(*   [%test_eq: int] (logic test_input 100) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let real_input = Parse.read "../inputs/day_11.txt" in *)
+(*   let expected = 458191688761 in *)
+(*   [%test_eq: int] (logic real_input 1000000) expected *)

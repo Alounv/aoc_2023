@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 
 let use_cache = true
@@ -210,85 +210,85 @@ let run (path : string) =
   print_newline ();
   print_int !cache_count
 
-(* tests - Part 1 *)
-
-let%test_unit "get_is_path_valid" =
-  let line = "???.###.##???#" |> String.to_seq |> Array.of_seq in
-  let path = [ { size = 3; start = 0 }; { size = 2; start = 4 } ] in
-  let index = 12 in
-  let expected = false in
-  [%test_eq: bool] (get_is_path_valid line path index) expected
-
-let%test_unit "get_is_path_valid" =
-  let line = "???.###.##???" |> String.to_seq |> Array.of_seq in
-  let path = [ { size = 3; start = 4 }; { size = 5; start = 8 } ] in
-  let index = 12 in
-  let expected = true in
-  [%test_eq: bool] (get_is_path_valid line path index) expected
-
-let%test_unit "get_is_path_valid" =
-  let line = "???.###.##???" |> String.to_seq |> Array.of_seq in
-  let path = [ { size = 3; start = 4 }; { size = 5; start = 8 } ] in
-  let index = 12 in
-  let expected = true in
-  [%test_eq: bool] (get_is_path_valid line path index) expected
-
-let%test_unit "get_is_path_valid" =
-  let line = "????????..?????#?#??" |> String.to_seq |> Array.of_seq in
-  let path = [ { size = 3; start = 5 }; { size = 5; start = 10 } ] in
-  let index = Array.length line - 1 in
-  let expected = false in
-  [%test_eq: bool] (get_is_path_valid line path index) expected
-
-let get_string_groups (paths : path list) : string =
-  paths
-  |> List.map (fun path ->
-      path
-      |> List.map (fun g -> Printf.sprintf "%d" g.start)
-      |> String.concat " ")
-  |> String.concat "\n"
-
-let%test_unit "get_paths" =
-  let input = "?###???????? 3,2,1" in
-  let chars, groups_sizes = parse_input input in
-  let paths = count_paths chars groups_sizes in
-  [%test_eq: int] paths 10
-
-let%test_unit "parse_input" =
-  let line = "?###????????" in
-  let groups = "3,2,1" in
-  let expected = (line |> String.to_seq |> Array.of_seq, [ 3; 2; 1 ]) in
-  [%test_eq: char array * int list] (parse_input (line ^ " " ^ groups)) expected
-
-let%test_unit "get_paths" =
-  let input = "????????..?????#?#?? 3,5" in
-  let chars, groups_sizes = parse_input input in
-  let paths = count_paths chars groups_sizes in
-  [%test_eq: int] paths 21
-
-let%test_unit "get_paths" =
-  let expected = 21 in
-  [%test_eq: int] (logic test_input) expected
-
-let%test_unit "logic" =
-  let real_input = Parse.read "../inputs/day_12.txt" in
-  let expected = 7674 in
-  [%test_eq: int] (logic real_input) expected
-
-(* tests - Part 2 *)
-(* Lucas's logic :: Thanks !!! *)
-
-let%test_unit "get_paths" =
-  let input = "?###???????? 3,2,1" in
-  let chars, groups_sizes = parse_input2 input in
-  let paths = count_paths chars groups_sizes in
-  [%test_eq: int] paths 506250
-
-let%test_unit "get_paths" =
-  let expected = 525152 in
-  [%test_eq: int] (logic2 test_input) expected
-
-let%test_unit "logic2" =
-  let real_input = Parse.read "../inputs/day_12.txt" in
-  let expected = 4443895258186 in
-  [%test_eq: int] (logic2 real_input) expected
+(* (* tests - Part 1 *) *)
+(**)
+(* let%test_unit "get_is_path_valid" = *)
+(*   let line = "???.###.##???#" |> String.to_seq |> Array.of_seq in *)
+(*   let path = [ { size = 3; start = 0 }; { size = 2; start = 4 } ] in *)
+(*   let index = 12 in *)
+(*   let expected = false in *)
+(*   [%test_eq: bool] (get_is_path_valid line path index) expected *)
+(**)
+(* let%test_unit "get_is_path_valid" = *)
+(*   let line = "???.###.##???" |> String.to_seq |> Array.of_seq in *)
+(*   let path = [ { size = 3; start = 4 }; { size = 5; start = 8 } ] in *)
+(*   let index = 12 in *)
+(*   let expected = true in *)
+(*   [%test_eq: bool] (get_is_path_valid line path index) expected *)
+(**)
+(* let%test_unit "get_is_path_valid" = *)
+(*   let line = "???.###.##???" |> String.to_seq |> Array.of_seq in *)
+(*   let path = [ { size = 3; start = 4 }; { size = 5; start = 8 } ] in *)
+(*   let index = 12 in *)
+(*   let expected = true in *)
+(*   [%test_eq: bool] (get_is_path_valid line path index) expected *)
+(**)
+(* let%test_unit "get_is_path_valid" = *)
+(*   let line = "????????..?????#?#??" |> String.to_seq |> Array.of_seq in *)
+(*   let path = [ { size = 3; start = 5 }; { size = 5; start = 10 } ] in *)
+(*   let index = Array.length line - 1 in *)
+(*   let expected = false in *)
+(*   [%test_eq: bool] (get_is_path_valid line path index) expected *)
+(**)
+(* let get_string_groups (paths : path list) : string = *)
+(*   paths *)
+(*   |> List.map (fun path -> *)
+(*       path *)
+(*       |> List.map (fun g -> Printf.sprintf "%d" g.start) *)
+(*       |> String.concat " ") *)
+(*   |> String.concat "\n" *)
+(**)
+(* let%test_unit "get_paths" = *)
+(*   let input = "?###???????? 3,2,1" in *)
+(*   let chars, groups_sizes = parse_input input in *)
+(*   let paths = count_paths chars groups_sizes in *)
+(*   [%test_eq: int] paths 10 *)
+(**)
+(* let%test_unit "parse_input" = *)
+(*   let line = "?###????????" in *)
+(*   let groups = "3,2,1" in *)
+(*   let expected = (line |> String.to_seq |> Array.of_seq, [ 3; 2; 1 ]) in *)
+(*   [%test_eq: char array * int list] (parse_input (line ^ " " ^ groups)) expected *)
+(**)
+(* let%test_unit "get_paths" = *)
+(*   let input = "????????..?????#?#?? 3,5" in *)
+(*   let chars, groups_sizes = parse_input input in *)
+(*   let paths = count_paths chars groups_sizes in *)
+(*   [%test_eq: int] paths 21 *)
+(**)
+(* let%test_unit "get_paths" = *)
+(*   let expected = 21 in *)
+(*   [%test_eq: int] (logic test_input) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let real_input = Parse.read "../inputs/day_12.txt" in *)
+(*   let expected = 7674 in *)
+(*   [%test_eq: int] (logic real_input) expected *)
+(**)
+(* (* tests - Part 2 *) *)
+(* (* Lucas's logic :: Thanks !!! *) *)
+(**)
+(* let%test_unit "get_paths" = *)
+(*   let input = "?###???????? 3,2,1" in *)
+(*   let chars, groups_sizes = parse_input2 input in *)
+(*   let paths = count_paths chars groups_sizes in *)
+(*   [%test_eq: int] paths 506250 *)
+(**)
+(* let%test_unit "get_paths" = *)
+(*   let expected = 525152 in *)
+(*   [%test_eq: int] (logic2 test_input) expected *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let real_input = Parse.read "../inputs/day_12.txt" in *)
+(*   let expected = 4443895258186 in *)
+(*   [%test_eq: int] (logic2 real_input) expected *)

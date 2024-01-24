@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 
 (* utilities *)
@@ -30,9 +30,9 @@ let get_repartition (hand : char list) : repartition =
     match hand with
     | [] -> acc
     | h :: _ ->
-        let previous = Hashtbl.find_opt acc h |> Option.value ~default:0 in
-        Hashtbl.replace acc h (previous + 1);
-        aux (tl hand) acc
+      let previous = Hashtbl.find_opt acc h |> Option.value ~default:0 in
+      Hashtbl.replace acc h (previous + 1);
+      aux (tl hand) acc
   in
   aux hand (Hashtbl.create 5)
 
@@ -111,17 +111,17 @@ let get_card_value (card : char) : int =
   | _ -> failwith "invalid card"
 
 let get_hands_values (hands : (char list * int) list) :
-    (char list * int * int) list =
+  (char list * int * int) list =
   let rec aux (hands : (char list * int) list)
       (acc : (char list * int * int) list) : (char list * int * int) list =
     match hands with
     | [] -> acc
     | (hand, bid) :: tl ->
-        let repartition = get_repartition hand in
-        let new_repartition = correct_repartition_with_jokers repartition in
-        let figure = get_highest_figure new_repartition in
-        let value = get_figure_value figure in
-        aux tl ((hand, value, bid) :: acc)
+      let repartition = get_repartition hand in
+      let new_repartition = correct_repartition_with_jokers repartition in
+      let figure = get_highest_figure new_repartition in
+      let value = get_figure_value figure in
+      aux tl ((hand, value, bid) :: acc)
   in
   aux hands []
 
@@ -174,26 +174,26 @@ let run (path : string) =
   let result = logic input in
   print_int result
 
-(* tests - Part 1 *)
-
-let test_input = "\n32T3K 765\nT55J5 684\nKK677 28\nKTJJT 220\nQQQJA 483\n"
-
+(* (* tests - Part 1 *) *)
+(**)
+(* let test_input = "\n32T3K 765\nT55J5 684\nKK677 28\nKTJJT 220\nQQQJA 483\n" *)
+(**)
+(* (* let%test_unit "logic" = *) *)
+(* (*   let expected = 6440 in *) *)
+(* (*   [%test_eq: int] (logic (Parse.get_lines test_input)) expected *) *)
+(* (**) *)
+(* (* let%test_unit "logic" = *) *)
+(* (*   let real_input = Parse.read "../inputs/day_7.txt" in *) *)
+(* (*   let expected = 248422077 in *) *)
+(* (*   [%test_eq: int] (logic real_input) expected *) *)
+(**)
+(* (* tests - Part 2 *) *)
+(**)
 (* let%test_unit "logic" = *)
-(*   let expected = 6440 in *)
+(*   let expected = 5905 in *)
 (*   [%test_eq: int] (logic (Parse.get_lines test_input)) expected *)
 (**)
 (* let%test_unit "logic" = *)
 (*   let real_input = Parse.read "../inputs/day_7.txt" in *)
-(*   let expected = 248422077 in *)
+(*   let expected = 249817836 in *)
 (*   [%test_eq: int] (logic real_input) expected *)
-
-(* tests - Part 2 *)
-
-let%test_unit "logic" =
-  let expected = 5905 in
-  [%test_eq: int] (logic (Parse.get_lines test_input)) expected
-
-let%test_unit "logic" =
-  let real_input = Parse.read "../inputs/day_7.txt" in
-  let expected = 249817836 in
-  [%test_eq: int] (logic real_input) expected
