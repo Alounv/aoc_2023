@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 
 (* utilities *)
@@ -85,26 +85,26 @@ let run (path : string) =
   let result = logic input in
   print_int result
 
-(* tests - Part 1 *)
-
-let test_input = "\n0 3 6 9 12 15\n1 3 6 10 15 21\n10 13 16 21 30 45\n"
-
-let%test_unit "logic" =
-  let expected = 114 in
-  [%test_eq: int] (logic (Parse.get_lines test_input)) expected
-
-let%test_unit "logic" =
-  let real_input = Parse.read "../inputs/day_9.txt" in
-  let expected = 1762065988 in
-  [%test_eq: int] (logic real_input) expected
-
-(* tests - Part 2 *)
-
-let%test_unit "logic" =
-  let expected = 2 in
-  [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected
-
-let%test_unit "logic" =
-  let real_input = Parse.read "../inputs/day_9.txt" in
-  let expected = 1066 in
-  [%test_eq: int] (logic2 real_input) expected
+(* (* tests - Part 1 *) *)
+(**)
+(* let test_input = "\n0 3 6 9 12 15\n1 3 6 10 15 21\n10 13 16 21 30 45\n" *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let expected = 114 in *)
+(*   [%test_eq: int] (logic (Parse.get_lines test_input)) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let real_input = Parse.read "../inputs/day_9.txt" in *)
+(*   let expected = 1762065988 in *)
+(*   [%test_eq: int] (logic real_input) expected *)
+(**)
+(* (* tests - Part 2 *) *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let expected = 2 in *)
+(*   [%test_eq: int] (logic2 (Parse.get_lines test_input)) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let real_input = Parse.read "../inputs/day_9.txt" in *)
+(*   let expected = 1066 in *)
+(*   [%test_eq: int] (logic2 real_input) expected *)

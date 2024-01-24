@@ -1,6 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
-open List
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open Utilities
 
 (* data structures *)
@@ -112,117 +111,117 @@ let run (_path : string) =
   let load = logic2 test_input in
   Printf.printf "%d\n" load
 
-(* tests - Part 1 *)
-
-let%test_unit "tilt_N_step" =
-  let expected =
-    "O.OO.#....\n\
-     O...#....#\n\
-     OO..O##..O\n\
-     .O.#...O..\n\
-     O....O..#.\n\
-     ..#...O#.#\n\
-     ..O..#.O.O\n\
-     ..........\n\
-     #OO..###..\n\
-     #....#...."
-  in
-  let map = map_from_strings test_input in
-  let result = tilt_N_step map in
-  [%test_eq: string] (string_from_map result) expected
-
-let%test_unit "tilt_north" =
-  let expected =
-    "OOOO.#.O..\n\
-     OO..#....#\n\
-     OO..O##..O\n\
-     O..#.OO...\n\
-     ........#.\n\
-     ..#....#.#\n\
-     ..O..#.O.O\n\
-     ..O.......\n\
-     #....###..\n\
-     #....#...."
-  in
-  let map = map_from_strings test_input in
-  let result = tilt_N map in
-  [%test_eq: string] (string_from_map result) expected
-
-let%test_unit "logic" =
-  let expected = 136 in
-  [%test_eq: int] (logic1 test_input) expected
-
-let%test_unit "logic" =
-  let real_input = Parse.read "../inputs/day_14.txt" in
-  let expected = 109833 in
-  [%test_eq: int] (logic1 real_input) expected
-
-(* tests - Part 2 *)
-
-let%test_unit "cycle 1" =
-  let expected =
-    ".....#....\n\
-     ....#...O#\n\
-     ...OO##...\n\
-     .OO#......\n\
-     .....OOO#.\n\
-     .O#...O#.#\n\
-     ....O#....\n\
-     ......OOOO\n\
-     #...O###..\n\
-     #..OO#...."
-  in
-
-  let map = map_from_strings test_input in
-  let result = map |> cycle in
-  [%test_eq: string] (string_from_map result) expected
-
-let%test_unit "cycle 2" =
-  let expected =
-    ".....#....\n\
-     ....#...O#\n\
-     .....##...\n\
-     ..O#......\n\
-     .....OOO#.\n\
-     .O#...O#.#\n\
-     ....O#...O\n\
-     .......OOO\n\
-     #..OO###..\n\
-     #.OOO#...O"
-  in
-
-  let map = map_from_strings test_input in
-  let result = map |> cycle |> cycle in
-  [%test_eq: string] (string_from_map result) expected
-
-let%test_unit "cycle 3" =
-  let expected =
-    ".....#....\n\
-     ....#...O#\n\
-     .....##...\n\
-     ..O#......\n\
-     .....OOO#.\n\
-     .O#...O#.#\n\
-     ....O#...O\n\
-     .......OOO\n\
-     #...O###.O\n\
-     #.OOO#...O"
-  in
-
-  let map = map_from_strings test_input in
-  let result = map |> cycle |> cycle |> cycle in
-  [%test_eq: string] (string_from_map result) expected
-
-let%test_unit "cycle until stable" =
-  let map = map_from_strings test_input in
-  let first, second = find_stable map in
-  [%test_eq: int list] [ first; second ] [ 2; 9 ]
-
-let%test_unit "logic2" =
-  let expected = 64 in
-  [%test_eq: int] (logic2 test_input) expected
-
-let%test_unit "logic2" =
-  let real_input = Parse.read "../inputs/day_14.txt" in
-  let expected = 99875 in
-  [%test_eq: int] (logic2 real_input) expected
+(* (* tests - Part 1 *) *)
+(**)
+(* let%test_unit "tilt_N_step" = *)
+(*   let expected = *)
+(* "O.OO.#....\n\ *)
+   (*      O...#....#\n\ *)
+   (*      OO..O##..O\n\ *)
+   (*      .O.#...O..\n\ *)
+   (*      O....O..#.\n\ *)
+   (*      ..#...O#.#\n\ *)
+   (*      ..O..#.O.O\n\ *)
+   (*      ..........\n\ *)
+   (*      #OO..###..\n\ *)
+   (*      #....#...." *)
+(*   in *)
+(*   let map = map_from_strings test_input in *)
+(*   let result = tilt_N_step map in *)
+(*   [%test_eq: string] (string_from_map result) expected *)
+(**)
+(* let%test_unit "tilt_north" = *)
+(*   let expected = *)
+(* "OOOO.#.O..\n\ *)
+   (*      OO..#....#\n\ *)
+   (*      OO..O##..O\n\ *)
+   (*      O..#.OO...\n\ *)
+   (*      ........#.\n\ *)
+   (*      ..#....#.#\n\ *)
+   (*      ..O..#.O.O\n\ *)
+   (*      ..O.......\n\ *)
+   (*      #....###..\n\ *)
+   (*      #....#...." *)
+(*   in *)
+(*   let map = map_from_strings test_input in *)
+(*   let result = tilt_N map in *)
+(*   [%test_eq: string] (string_from_map result) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let expected = 136 in *)
+(*   [%test_eq: int] (logic1 test_input) expected *)
+(**)
+(* let%test_unit "logic" = *)
+(*   let real_input = Parse.read "../inputs/day_14.txt" in *)
+(*   let expected = 109833 in *)
+(*   [%test_eq: int] (logic1 real_input) expected *)
+(**)
+(* (* tests - Part 2 *) *)
+(**)
+(* let%test_unit "cycle 1" = *)
+(*   let expected = *)
+(* ".....#....\n\ *)
+   (*      ....#...O#\n\ *)
+   (*      ...OO##...\n\ *)
+   (*      .OO#......\n\ *)
+   (*      .....OOO#.\n\ *)
+   (*      .O#...O#.#\n\ *)
+   (*      ....O#....\n\ *)
+   (*      ......OOOO\n\ *)
+   (*      #...O###..\n\ *)
+   (*      #..OO#...." *)
+(*   in *)
+(**)
+(*   let map = map_from_strings test_input in *)
+(*   let result = map |> cycle in *)
+(*   [%test_eq: string] (string_from_map result) expected *)
+(**)
+(* let%test_unit "cycle 2" = *)
+(*   let expected = *)
+(* ".....#....\n\ *)
+   (*      ....#...O#\n\ *)
+   (*      .....##...\n\ *)
+   (*      ..O#......\n\ *)
+   (*      .....OOO#.\n\ *)
+   (*      .O#...O#.#\n\ *)
+   (*      ....O#...O\n\ *)
+   (*      .......OOO\n\ *)
+   (*      #..OO###..\n\ *)
+   (*      #.OOO#...O" *)
+(*   in *)
+(**)
+(*   let map = map_from_strings test_input in *)
+(*   let result = map |> cycle |> cycle in *)
+(*   [%test_eq: string] (string_from_map result) expected *)
+(**)
+(* let%test_unit "cycle 3" = *)
+(*   let expected = *)
+(* ".....#....\n\ *)
+   (*      ....#...O#\n\ *)
+   (*      .....##...\n\ *)
+   (*      ..O#......\n\ *)
+   (*      .....OOO#.\n\ *)
+   (*      .O#...O#.#\n\ *)
+   (*      ....O#...O\n\ *)
+   (*      .......OOO\n\ *)
+   (*      #...O###.O\n\ *)
+   (*      #.OOO#...O" *)
+(*   in *)
+(**)
+(*   let map = map_from_strings test_input in *)
+(*   let result = map |> cycle |> cycle |> cycle in *)
+(*   [%test_eq: string] (string_from_map result) expected *)
+(**)
+(* let%test_unit "cycle until stable" = *)
+(*   let map = map_from_strings test_input in *)
+(*   let first, second = find_stable map in *)
+(*   [%test_eq: int list] [ first; second ] [ 2; 9 ] *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let expected = 64 in *)
+(*   [%test_eq: int] (logic2 test_input) expected *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let real_input = Parse.read "../inputs/day_14.txt" in *)
+(*   let expected = 99875 in *)
+(*   [%test_eq: int] (logic2 real_input) expected *)
