@@ -1,17 +1,7 @@
 (* open Ppx_compare_lib.Builtin *)
 (* open Sexplib.Std *)
+open Utilities
 open List
-
-(* utilities *)
-
-let gcd (a : int) (b : int) : int =
-  let rec loop (a : int) (b : int) : int =
-    if b = 0 then a else loop b (a mod b)
-  in
-  loop a b
-
-let lcm (a : int) (b : int) : int = a * b / gcd a b
-let lcm_list (l : int list) : int = List.fold_left (fun acc x -> lcm acc x) 1 l
 
 (* data structures *)
 

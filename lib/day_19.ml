@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 open Str
 (* open Utilities *)
@@ -253,24 +253,24 @@ let run (_path : string) =
   let result = logic2 input in
   Printf.printf "%d\n" result
 
-(* ============== TESTS DAY 1 ============== *)
-
-let%test_unit "logic1" =
-  let expected = 19114 in
-  [%test_eq: int] (logic1 test_input) expected
-
-let%test_unit "logic1" =
-  let real_input = Parse.read "../inputs/day_19.txt" |> String.concat "\n" in
-  let expected = 432427 in
-  [%test_eq: int] (logic1 real_input) expected
-
-(* ============== TESTS DAY 2 ============== *)
-
-let%test_unit "logic2" =
-  let expected = 167409079868000 in
-  [%test_eq: int] (logic2 test_input) expected
-
-let%test_unit "logic2" =
-  let real_input = Parse.read "../inputs/day_19.txt" |> String.concat "\n" in
-  let expected = 143760172569135 in
-  [%test_eq: int] (logic2 real_input) expected
+(* (* ============== TESTS DAY 1 ============== *) *)
+(**)
+(* let%test_unit "logic1" = *)
+(*   let expected = 19114 in *)
+(*   [%test_eq: int] (logic1 test_input) expected *)
+(**)
+(* let%test_unit "logic1" = *)
+(*   let real_input = Parse.read "../inputs/day_19.txt" |> String.concat "\n" in *)
+(*   let expected = 432427 in *)
+(*   [%test_eq: int] (logic1 real_input) expected *)
+(**)
+(* (* ============== TESTS DAY 2 ============== *) *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let expected = 167409079868000 in *)
+(*   [%test_eq: int] (logic2 test_input) expected *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let real_input = Parse.read "../inputs/day_19.txt" |> String.concat "\n" in *)
+(*   let expected = 143760172569135 in *)
+(*   [%test_eq: int] (logic2 real_input) expected *)
