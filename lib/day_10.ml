@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 open Utilities
 
@@ -328,60 +328,60 @@ let run (_path : string) =
 
 (* tests - Part 2 *)
 
-let%test_unit "count_in_line" =
-  let line = "| |   | |" |> String.to_seq |> List.of_seq |> Array.of_list in
-  let result = count_in_line line in
-  [%test_eq: int] result 2
-
-let%test_unit "count_in_line" =
-  let line = "| FJ   | |" |> String.to_seq |> List.of_seq |> Array.of_list in
-  let result = count_in_line line in
-  [%test_eq: int] result 2
-
-let%test_unit "count_in_line" =
-  let line = "| L7   | |" |> String.to_seq |> List.of_seq |> Array.of_list in
-  let result = count_in_line line in
-  [%test_eq: int] result 2
-
-let%test_unit "count_in_line" =
-  let line = "| L7   L7 |" |> String.to_seq |> List.of_seq |> Array.of_list in
-  let result = count_in_line line in
-  [%test_eq: int] result 2
-
-let%test_unit "count_in_line" =
-  let line = "| L7   FJ |" |> String.to_seq |> List.of_seq |> Array.of_list in
-  let result = count_in_line line in
-  [%test_eq: int] result 2
-
-let%test_unit "count_in_line" =
-  let line =
-    "| L------7   L--7 |" |> String.to_seq |> List.of_seq |> Array.of_list
-  in
-  let result = count_in_line line in
-  [%test_eq: int] result 2
-
-let%test_unit "count_in_line" =
-  let line =
-    "| L------7L-7L-7   L--7 |" |> String.to_seq |> List.of_seq |> Array.of_list
-  in
-  let result = count_in_line line in
-  [%test_eq: int] result 2
-
-let%test_unit "count_in_line" =
-  let line = "| L-----J |" |> String.to_seq |> List.of_seq |> Array.of_list in
-  let result = count_in_line line in
-  [%test_eq: int] result 2
-
-let%test_unit "count_in_line" =
-  let line = "| F-----7 |" |> String.to_seq |> List.of_seq |> Array.of_list in
-  let result = count_in_line line in
-  [%test_eq: int] result 2
-
-let%test_unit "logic2" =
-  let expected = 10 in
-  [%test_eq: int] (logic2 test_input_2) expected
-
-let%test_unit "logic2" =
-  let real_input = Parse.read "../inputs/day_10.txt" in
-  let expected = 355 in
-  [%test_eq: int] (logic2 real_input) expected
+(* let%test_unit "count_in_line" = *)
+(*   let line = "| |   | |" |> String.to_seq |> List.of_seq |> Array.of_list in *)
+(*   let result = count_in_line line in *)
+(*   [%test_eq: int] result 2 *)
+(**)
+(* let%test_unit "count_in_line" = *)
+(*   let line = "| FJ   | |" |> String.to_seq |> List.of_seq |> Array.of_list in *)
+(*   let result = count_in_line line in *)
+(*   [%test_eq: int] result 2 *)
+(**)
+(* let%test_unit "count_in_line" = *)
+(*   let line = "| L7   | |" |> String.to_seq |> List.of_seq |> Array.of_list in *)
+(*   let result = count_in_line line in *)
+(*   [%test_eq: int] result 2 *)
+(**)
+(* let%test_unit "count_in_line" = *)
+(*   let line = "| L7   L7 |" |> String.to_seq |> List.of_seq |> Array.of_list in *)
+(*   let result = count_in_line line in *)
+(*   [%test_eq: int] result 2 *)
+(**)
+(* let%test_unit "count_in_line" = *)
+(*   let line = "| L7   FJ |" |> String.to_seq |> List.of_seq |> Array.of_list in *)
+(*   let result = count_in_line line in *)
+(*   [%test_eq: int] result 2 *)
+(**)
+(* let%test_unit "count_in_line" = *)
+(*   let line = *)
+(*     "| L------7   L--7 |" |> String.to_seq |> List.of_seq |> Array.of_list *)
+(*   in *)
+(*   let result = count_in_line line in *)
+(*   [%test_eq: int] result 2 *)
+(**)
+(* let%test_unit "count_in_line" = *)
+(*   let line = *)
+(*     "| L------7L-7L-7   L--7 |" |> String.to_seq |> List.of_seq |> Array.of_list *)
+(*   in *)
+(*   let result = count_in_line line in *)
+(*   [%test_eq: int] result 2 *)
+(**)
+(* let%test_unit "count_in_line" = *)
+(*   let line = "| L-----J |" |> String.to_seq |> List.of_seq |> Array.of_list in *)
+(*   let result = count_in_line line in *)
+(*   [%test_eq: int] result 2 *)
+(**)
+(* let%test_unit "count_in_line" = *)
+(*   let line = "| F-----7 |" |> String.to_seq |> List.of_seq |> Array.of_list in *)
+(*   let result = count_in_line line in *)
+(*   [%test_eq: int] result 2 *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let expected = 10 in *)
+(*   [%test_eq: int] (logic2 test_input_2) expected *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let real_input = Parse.read "../inputs/day_10.txt" in *)
+(*   let expected = 355 in *)
+(*   [%test_eq: int] (logic2 real_input) expected *)

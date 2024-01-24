@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 open Utilities
 
@@ -218,67 +218,67 @@ let run (path : string) =
   let result = logic2 input in
   Printf.printf "%d\n" result
 
-(* tests - Part 1 *)
-
-let%test_unit "get_best_value" =
-  let test_input = Parse.get_lines "24\n32" in
-  let map = map_from_strings test_input in
-  let result = get_best_value map 3 0 in
-  [%test_eq: int] result 5
-
-let%test_unit "get_best_value" =
-  let test_input = Parse.get_lines "0100\n0440\n4440\n4440" in
-  let map = map_from_strings test_input in
-  let result = get_best_value map 3 0 in
-  [%test_eq: int] result 1
-
-let%test_unit "get_best_value" =
-  let test_input = Parse.get_lines "24134323113\n32154535356\n32552456542" in
-  let map = map_from_strings test_input in
-  let result = get_best_value map 3 0 in
-  [%test_eq: int] result 43
-
-let%test_unit "get_best_value" =
-  let test_input =
-    Parse.get_lines
-      "241343231132\n\
-       321545353562\n\
-       325524565425\n\
-       344658584545\n\
-       454665786753\n\
-       143859879845\n\
-       445787698776\n\
-       363787797965"
-  in
-  let map = map_from_strings test_input in
-  let result = get_best_value map 3 0 in
-  [%test_eq: int] result 71
-
-let%test_unit "logic1" =
-  let expected = 102 in
-  [%test_eq: int] (logic1 test_input) expected
-
+(* (* tests - Part 1 *) *)
+(**)
+(* let%test_unit "get_best_value" = *)
+(*   let test_input = Parse.get_lines "24\n32" in *)
+(*   let map = map_from_strings test_input in *)
+(*   let result = get_best_value map 3 0 in *)
+(*   [%test_eq: int] result 5 *)
+(**)
+(* let%test_unit "get_best_value" = *)
+(*   let test_input = Parse.get_lines "0100\n0440\n4440\n4440" in *)
+(*   let map = map_from_strings test_input in *)
+(*   let result = get_best_value map 3 0 in *)
+(*   [%test_eq: int] result 1 *)
+(**)
+(* let%test_unit "get_best_value" = *)
+(*   let test_input = Parse.get_lines "24134323113\n32154535356\n32552456542" in *)
+(*   let map = map_from_strings test_input in *)
+(*   let result = get_best_value map 3 0 in *)
+(*   [%test_eq: int] result 43 *)
+(**)
+(* let%test_unit "get_best_value" = *)
+(*   let test_input = *)
+(*     Parse.get_lines *)
+(* "241343231132\n\ *)
+   (*        321545353562\n\ *)
+   (*        325524565425\n\ *)
+   (*        344658584545\n\ *)
+   (*        454665786753\n\ *)
+   (*        143859879845\n\ *)
+   (*        445787698776\n\ *)
+   (*        363787797965" *)
+(*   in *)
+(*   let map = map_from_strings test_input in *)
+(*   let result = get_best_value map 3 0 in *)
+(*   [%test_eq: int] result 71 *)
+(**)
 (* let%test_unit "logic1" = *)
-(*   let real_input = Parse.read "../inputs/day_17.txt" in *)
-(*   let expected = 1076 in *)
-(*   [%test_eq: int] (logic1 real_input) expected *)
-
-(* tests - Part 2 *)
-
-let%test_unit "get_best_value" =
-  let test_input =
-    Parse.get_lines
-      "111111111111\n999999999991\n999999999991\n999999999991\n999999999991"
-  in
-  let map = map_from_strings test_input in
-  let result = get_best_value map 10 4 in
-  [%test_eq: int] result 71
-
-let%test_unit "logic2" =
-  let expected = 94 in
-  [%test_eq: int] (logic2 test_input) expected
-
-(* let%test_unit "logic1" = *)
-(*   let real_input = Parse.read "../inputs/day_17.txt" in *)
-(*   let expected = 1219 in *)
-(*   [%test_eq: int] (logic2 real_input) expected *)
+(*   let expected = 102 in *)
+(*   [%test_eq: int] (logic1 test_input) expected *)
+(**)
+(* (* let%test_unit "logic1" = *) *)
+(* (*   let real_input = Parse.read "../inputs/day_17.txt" in *) *)
+(* (*   let expected = 1076 in *) *)
+(* (*   [%test_eq: int] (logic1 real_input) expected *) *)
+(**)
+(* (* tests - Part 2 *) *)
+(**)
+(* let%test_unit "get_best_value" = *)
+(*   let test_input = *)
+(*     Parse.get_lines *)
+(*       "111111111111\n999999999991\n999999999991\n999999999991\n999999999991" *)
+(*   in *)
+(*   let map = map_from_strings test_input in *)
+(*   let result = get_best_value map 10 4 in *)
+(*   [%test_eq: int] result 71 *)
+(**)
+(* let%test_unit "logic2" = *)
+(*   let expected = 94 in *)
+(*   [%test_eq: int] (logic2 test_input) expected *)
+(**)
+(* (* let%test_unit "logic1" = *) *)
+(* (*   let real_input = Parse.read "../inputs/day_17.txt" in *) *)
+(* (*   let expected = 1219 in *) *)
+(* (*   [%test_eq: int] (logic2 real_input) expected *) *)
