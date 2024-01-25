@@ -359,3 +359,18 @@ let adjust_path (path : path) : path =
   in
   loop path;
   !new_path
+
+(* encode int to letters *)
+
+let int_to_letters n =
+  let rec int_to_letters_helper n acc =
+    if n <= 0 then acc
+    else
+      let letter =
+        Char.escaped (Char.chr (((n - 1) mod 26) + int_of_char 'A'))
+      in
+      int_to_letters_helper ((n - 1) / 26) (letter :: acc)
+  in
+  match int_to_letters_helper n [] with
+  | [] -> "A" (* If the input is 0, default to "A" *)
+  | letters -> String.concat "" (List.rev letters)
