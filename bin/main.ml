@@ -1,1 +1,1 @@
-let () = Day_21.run "./inputs/day_21.txt"
+let () = Day_22.run "./inputs/day_22.txt"
