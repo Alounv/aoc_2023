@@ -75,6 +75,23 @@ let map_from_path (path : path) (path_char : char) (empty_char : char) : map =
   path |> List.iter (fun p -> map.(p.y).(p.x) <- path_char);
   map
 
+let merge_map (map1 : map) (map2 : map) : map =
+  let max_x = Array.length map1.(0) in
+  let max_y = Array.length map1 in
+  let max_x2 = Array.length map2.(0) in
+  let max_y2 = Array.length map2 in
+
+  let map = Array.make_matrix max_y max_x ' ' in
+  for y = 0 to max_y - 1 do
+    for x = 0 to max_x - 1 do
+      let is_in_bounds = x < max_x2 && y < max_y2 in
+      if is_in_bounds && map2.(y).(x) <> '.' then map.(y).(x) <- map2.(y).(x)
+      else map.(y).(x) <- map1.(y).(x)
+    done
+  done;
+  map
+
+(* get path from map *)
 (* get map from path and map *)
 
 let map_from_path_and_map (path : path) (initial_map : map) (empty_char : char)
@@ -204,6 +221,18 @@ let count_char_in_map (map : map) (char : char) : int =
   in
   aux 0 0 0
 
+let find_char_in_map (map : map) (char : char) : point =
+  let max_x = Array.length map.(0) in
+  let max_y = Array.length map in
+  let rec aux (x : int) (y : int) : point =
+    if y >= max_y then { x = -1; y = -1 }
+    else if x >= max_x then aux 0 (y + 1)
+    else
+      let c = map.(y).(x) in
+      if c <> char then aux (x + 1) y else { x; y }
+  in
+  aux 0 0
+
 let count_chars_in_map (map : map) (chars : char list) : int =
   let max_x = Array.length map.(0) in
   let max_y = Array.length map in
@@ -295,6 +324,14 @@ let int_of_pos (map : map) (pos : point) : int =
   let value = int_of_char char - 48 in
   value
 
+(* is_in_bounds *)
+
+let is_in_bounds (map : map) (pos : point) : bool =
+  pos.x >= 0
+  && pos.x < Array.length map.(0)
+  && pos.y >= 0
+  && pos.y < Array.length map
+
 (* lcm *)
 
 let gcd (a : int) (b : int) : int =
@@ -305,3 +342,20 @@ let gcd (a : int) (b : int) : int =
 
 let lcm (a : int) (b : int) : int = a * b / gcd a b
 let lcm_list (l : int list) : int = List.fold_left (fun acc x -> lcm acc x) 1 l
+
+(* adjust path *)
+
+let adjust_path (path : path) : path =
+  let { x = min_x; y = min_y; _ } = get_path_min path in
+
+  let new_path = ref [] in
+  let rec loop (path : path) =
+    match path with
+    | [] -> ()
+    | { x; y } :: tail ->
+      let new_pos = { x = x - min_x; y = y - min_y } in
+      new_path := new_pos :: !new_path;
+      loop tail
+  in
+  loop path;
+  !new_path
