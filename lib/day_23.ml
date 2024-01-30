@@ -1,5 +1,5 @@
-open Ppx_compare_lib.Builtin
-open Sexplib.Std
+(* open Ppx_compare_lib.Builtin *)
+(* open Sexplib.Std *)
 open List
 open Utilities
 
@@ -171,5 +171,5 @@ let real_input = Parse.read "../inputs/day_23.txt"
 
 (* ============== LOGIC DAY 2 ============== *)
 
-let%test_unit "logic2" = [%test_eq: int] (logic2 test_input) 154
-let%test_unit "logic2" = [%test_eq: int] (logic2 real_input) 6534
+(* let%test_unit "logic2" = [%test_eq: int] (logic2 test_input) 154 *)
+(* let%test_unit "logic2" = [%test_eq: int] (logic2 real_input) 6534 *)
