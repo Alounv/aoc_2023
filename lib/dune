@@ -224,6 +224,15 @@
   (pps ppx_inline_test ppx_assert)))
 
 (library
+ (name day_24)
+ (modules day_24)
+ (libraries parse str utilities)
+ (inline_tests
+  (deps ../inputs/day_24.txt))
+ (preprocess
+  (pps ppx_inline_test ppx_assert)))
+
+(library
  (name day_X)
  (modules day_X)
  (libraries parse str utilities)
