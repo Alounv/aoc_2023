@@ -76,13 +76,23 @@ let move (map : map) (beams : beam list) : beam list =
 
 let key_of_beam ({ x; y; _ } : beam) : string = Printf.sprintf "%d,%d" x y
 
-let print_map =
+let clear (x : int) : unit =
+  let _ = Sys.command "clear" + x in
+  ()
+
+let print_map (map : map) : unit =
+  let max_y = Array.length map - 1 in
+  Unix.sleepf 0.01;
+  ignore (clear max_y);
+
   print_map_with_colors
     [
-      { color = 7; chars = [ '|'; '-'; '/'; '\\' ] };
-      { color = 5; chars = [ '^'; '>'; 'v'; '<'; '1'; '2'; '3'; '4' ] };
-      { color = 10; chars = [ '.' ] };
+      { color = 6; chars = [ '|'; '-'; '/'; '\\' ] };
+      { color = 0; chars = [ '.' ] };
     ]
+    map;
+  flush stdout;
+  ()
 
 let remove_duplicates (existing_beams : (string, dir t) Hashtbl.t)
     (beams : beam list) : beam list =
@@ -121,6 +131,7 @@ let count (map : map) (start : beam) : int =
   beam_map.(start.y).(start.x) <- print_dir start.dir;
 
   let rec aux (beams : beam list) : beam list =
+    print_map beam_map;
     if length beams = 0 then []
     else
       let new_beams = move map beams in
@@ -130,7 +141,6 @@ let count (map : map) (start : beam) : int =
   in
 
   let _ = aux [ start ] in
-  print_map beam_map;
   existing_beams |> Hashtbl.length
 
 let logic1 (lines : string list) (start : beam) : int =
@@ -165,9 +175,9 @@ let logic2 (lines : string list) : int =
 
 (* main *)
 
-let run (_path : string) =
-  (* let input = Parse.read path in *)
-  let load = logic1 test_input { x = 0; y = 0; dir = E } in
+let run (path : string) =
+  let input = Parse.read path in
+  let load = logic1 input { x = 0; y = 0; dir = S } in
   Printf.printf "%d\n" load
 
 (* (* tests - Part 1 *) *)
